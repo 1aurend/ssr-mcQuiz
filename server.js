@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -94,11 +94,11 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _QuizSelector = __webpack_require__(9);
+var _QuizSelector = __webpack_require__(11);
 
 var _QuizSelector2 = _interopRequireDefault(_QuizSelector);
 
-var _Go = __webpack_require__(10);
+var _Go = __webpack_require__(12);
 
 var _Go2 = _interopRequireDefault(_Go);
 
@@ -163,7 +163,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Quiz = __webpack_require__(11);
+var _Quiz = __webpack_require__(13);
 
 var _Quiz2 = _interopRequireDefault(_Quiz);
 
@@ -192,17 +192,112 @@ exports.default = QuizContainer;
 "use strict";
 
 
-var _express = __webpack_require__(5);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+
+function makeQsReadable(idsArray, questions) {
+
+  var readableQs = [];
+
+  questions.map(function (question) {
+
+    var update = question;
+
+    for (var i = 0; i < update.fields.answers.length; i++) {
+      for (var j = 0; j < idsArray.length; j++) {
+        if (update.fields.answers[i] === idsArray[j].idA) {
+          update.fields.answers[i] = idsArray[j].text;
+          break;
+        }
+      }
+    }
+
+    for (var k = 0; k < update.fields.choices.length; k++) {
+      for (var l = 0; l < idsArray.length; l++) {
+        if (update.fields.choices[k] === idsArray[l].idC) {
+          update.fields.choices[k] = idsArray[l].text;
+          break;
+        }
+      }
+    }
+
+    readableQs.push(update);
+  });
+
+  return readableQs;
+}
+
+exports.default = makeQsReadable;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _makeqsreadable = __webpack_require__(4);
+
+var _makeqsreadable2 = _interopRequireDefault(_makeqsreadable);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function matchIDs(questions, answers, choices, makeQsReadable) {
+
+  var namestoAnswerIDs = [];
+  var addChoiceIDs = [];
+
+  answers.map(function (answer) {
+
+    var match = {
+      text: answer.fields.name,
+      idA: answer.id
+    };
+
+    namestoAnswerIDs.push(match);
+    return;
+  });
+
+  namestoAnswerIDs.map(function (item) {
+
+    for (var i = 0; i < choices.length; i++) {
+      if (choices[i].fields.name === item.text) {
+        item = _extends({}, item, { idC: choices[i].id });
+        addChoiceIDs.push(item);
+      }
+    }
+    return;
+  });
+
+  return makeQsReadable(addChoiceIDs, questions);
+}
+
+exports.default = matchIDs;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+__webpack_require__(7);
+
+var _express = __webpack_require__(8);
 
 var _express2 = _interopRequireDefault(_express);
 
-var _cors = __webpack_require__(6);
+var _server = __webpack_require__(9);
 
-var _cors2 = _interopRequireDefault(_cors);
-
-var _server = __webpack_require__(7);
-
-var _App = __webpack_require__(8);
+var _App = __webpack_require__(10);
 
 var _App2 = _interopRequireDefault(_App);
 
@@ -210,25 +305,28 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _serializeJavascript = __webpack_require__(16);
+var _serializeJavascript = __webpack_require__(18);
 
 var _serializeJavascript2 = _interopRequireDefault(_serializeJavascript);
 
-var _api = __webpack_require__(17);
+var _atfetch = __webpack_require__(19);
 
-var _api2 = _interopRequireDefault(_api);
+var _atfetch2 = _interopRequireDefault(_atfetch);
 
 var _reactRouterDom = __webpack_require__(1);
 
-var _routes = __webpack_require__(19);
+var _routes = __webpack_require__(22);
 
 var _routes2 = _interopRequireDefault(_routes);
+
+var _matchids = __webpack_require__(5);
+
+var _matchids2 = _interopRequireDefault(_matchids);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var app = (0, _express2.default)();
 
-app.use((0, _cors2.default)());
 app.use(_express2.default.static("public"));
 
 app.get("*", function (req, res, next) {
@@ -237,7 +335,7 @@ app.get("*", function (req, res, next) {
     return (0, _reactRouterDom.matchPath)(req.url, route);
   }) || {};
 
-  var data = reqRoute.needsData ? (0, _api2.default)(100) : Promise.resolve();
+  var data = reqRoute.needsData ? (0, _atfetch2.default)(_matchids2.default) : Promise.resolve();
 
   data.then(function (data) {
 
@@ -258,25 +356,25 @@ app.listen(3000, function () {
 });
 
 /***/ }),
-/* 5 */
+/* 7 */
+/***/ (function(module, exports) {
+
+module.exports = require("@babel/polyfill");
+
+/***/ }),
+/* 8 */
 /***/ (function(module, exports) {
 
 module.exports = require("express");
 
 /***/ }),
-/* 6 */
-/***/ (function(module, exports) {
-
-module.exports = require("cors");
-
-/***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports) {
 
 module.exports = require("react-dom/server");
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -300,7 +398,7 @@ var _QuizContainer = __webpack_require__(3);
 
 var _QuizContainer2 = _interopRequireDefault(_QuizContainer);
 
-var _reactRouter = __webpack_require__(15);
+var _reactRouter = __webpack_require__(17);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -323,7 +421,7 @@ function App(props) {
 exports.default = App;
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -379,7 +477,7 @@ function QuizSelector(props) {
 exports.default = QuizSelector;
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -424,7 +522,7 @@ function Go(props) {
 exports.default = Go;
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -442,15 +540,15 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Question = __webpack_require__(12);
+var _Question = __webpack_require__(14);
 
 var _Question2 = _interopRequireDefault(_Question);
 
-var _Choice = __webpack_require__(13);
+var _Choice = __webpack_require__(15);
 
 var _Choice2 = _interopRequireDefault(_Choice);
 
-var _Results = __webpack_require__(14);
+var _Results = __webpack_require__(16);
 
 var _Results2 = _interopRequireDefault(_Results);
 
@@ -579,7 +677,7 @@ function Quiz(props) {
 exports.default = Quiz;
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -611,7 +709,7 @@ function Question(props) {
 exports.default = Question;
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -639,7 +737,7 @@ function Choice(props) {
 exports.default = Choice;
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -685,56 +783,160 @@ function Results(props) {
 exports.default = Results;
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports) {
 
 module.exports = require("react-router");
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports) {
 
 module.exports = require("serialize-javascript");
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
-var _axios = __webpack_require__(18);
+var loadQuiz = function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+        var gameLabBase, questions, choices, answers, Qs, As, Cs, quizData;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+            while (1) {
+                switch (_context.prev = _context.next) {
+                    case 0:
+                        gameLabBase = new _airtable2.default({ apiKey: process.env.GAMELAB_AT_KEY }).base(process.env.GAMELAB_BASE_ID);
+                        questions = [];
+                        choices = [];
+                        answers = [];
 
-var _axios2 = _interopRequireDefault(_axios);
+                        console.log('Fetching Quiz Data -----------------------');
+
+                        Qs = gameLabBase('flashcardQs').select({
+                            maxRecords: 100,
+                            view: "Grid view"
+                        }).eachPage(function page(records, fetchNextPage) {
+
+                            records.forEach(function (record) {
+                                console.log('Retrieved', record.get('questionText'));
+                                questions.push(record._rawJson);
+                            });
+                            fetchNextPage();
+                        }).then(function () {
+                            return 'got Qs!';
+                        });
+                        As = gameLabBase('fcAnswers').select({
+                            maxRecords: 100,
+                            view: "Grid view"
+                        }).eachPage(function page(records, fetchNextPage) {
+
+                            records.forEach(function (record) {
+                                console.log('Retrieved', record.get('name'));
+                                answers.push(record._rawJson);
+                            });
+                            fetchNextPage();
+                        }).then(function () {
+                            return 'got As!';
+                        });
+                        Cs = gameLabBase('fcChoices').select({
+                            maxRecords: 100,
+                            view: "Grid view"
+                        }).eachPage(function page(records, fetchNextPage) {
+
+                            records.forEach(function (record) {
+                                console.log('Retrieved', record.get('name'));
+                                choices.push(record._rawJson);
+                            });
+                            fetchNextPage();
+                        }).then(function () {
+                            return 'got Cs!';
+                        });
+                        _context.t0 = console;
+                        _context.next = 11;
+                        return Qs;
+
+                    case 11:
+                        _context.t1 = _context.sent;
+
+                        _context.t0.log.call(_context.t0, _context.t1);
+
+                        _context.t2 = console;
+                        _context.next = 16;
+                        return As;
+
+                    case 16:
+                        _context.t3 = _context.sent;
+
+                        _context.t2.log.call(_context.t2, _context.t3);
+
+                        _context.t4 = console;
+                        _context.next = 21;
+                        return Cs;
+
+                    case 21:
+                        _context.t5 = _context.sent;
+
+                        _context.t4.log.call(_context.t4, _context.t5);
+
+                        quizData = (0, _matchids2.default)(questions, answers, choices, _makeqsreadable2.default);
+
+                        console.log(JSON.stringify(quizData, null, 4));
+                        return _context.abrupt('return', quizData);
+
+                    case 26:
+                    case 'end':
+                        return _context.stop();
+                }
+            }
+        }, _callee, this);
+    }));
+
+    return function loadQuiz() {
+        return _ref.apply(this, arguments);
+    };
+}();
+
+var _makeqsreadable = __webpack_require__(4);
+
+var _makeqsreadable2 = _interopRequireDefault(_makeqsreadable);
+
+var _matchids = __webpack_require__(5);
+
+var _matchids2 = _interopRequireDefault(_matchids);
+
+var _airtable = __webpack_require__(20);
+
+var _airtable2 = _interopRequireDefault(_airtable);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function loadQuiz(numQs) {
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-  return _axios2.default.post('https://www.secretmusiclab.com/tests', {
-    num: numQs
-  }).then(function (response) {
-    return JSON.parse(response.data);
-  }).catch(function (error) {
-    console.log(error);
-    return null;
-  });
-}
+__webpack_require__(21).config();
 
 exports.default = loadQuiz;
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports) {
 
-module.exports = require("axios");
+module.exports = require("airtable");
 
 /***/ }),
-/* 19 */
+/* 21 */
+/***/ (function(module, exports) {
+
+module.exports = require("dotenv");
+
+/***/ }),
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

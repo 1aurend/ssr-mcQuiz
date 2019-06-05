@@ -1,17 +1,17 @@
+import "@babel/polyfill"
 import express from "express"
-import cors from "cors"
 import { renderToString } from "react-dom/server"
 import App from '../shared/App'
 import React from 'react'
 import serialize from "serialize-javascript"
-import loadQuiz from '../shared/api'
+import loadQuiz from '../shared/atfetch'
 import { StaticRouter, matchPath } from 'react-router-dom'
 import routes from '../shared/routes'
+import matchIDs from './tools/matchids'
 
 
 const app = express()
 
-app.use(cors())
 app.use(express.static("public"))
 
 
@@ -21,7 +21,7 @@ app.get("*", (req, res, next) => {
     (route) => matchPath(req.url, route)
   ) || {}
 
-  const data = reqRoute.needsData ? loadQuiz(100) : Promise.resolve()
+  const data = reqRoute.needsData ? loadQuiz(matchIDs) : Promise.resolve()
 
   data.then((data) => {
 
