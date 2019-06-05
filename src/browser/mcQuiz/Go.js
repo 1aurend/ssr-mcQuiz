@@ -5,8 +5,6 @@ import { Link } from 'react-router-dom'
 
 function Go(props) {
 
-  console.log('here is props.num from Go ' + props.num);
-
   return (
     <div id='go'>
       <Link to={{

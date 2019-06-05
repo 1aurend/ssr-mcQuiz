@@ -13357,8 +13357,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
@@ -13375,19 +13373,13 @@ var _reactRouter = __webpack_require__(69);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function App(props) {
-
-  console.log(props.data);
+function App() {
 
   return _react2.default.createElement(
     _reactRouter.Switch,
     null,
-    _react2.default.createElement(_reactRouter.Route, { path: '/', exact: true, render: function render(props) {
-        return _react2.default.createElement(_Start2.default, _extends({}, props, { data: props.data }));
-      } }),
-    _react2.default.createElement(_reactRouter.Route, { path: '/quiz', render: function render(props) {
-        return _react2.default.createElement(_QuizContainer2.default, props);
-      } })
+    _react2.default.createElement(_reactRouter.Route, { path: '/', exact: true, component: _Start2.default }),
+    _react2.default.createElement(_reactRouter.Route, { path: '/quiz', component: _QuizContainer2.default })
   );
 }
 
@@ -13545,8 +13537,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 
 function Go(props) {
-
-  console.log('here is props.num from Go ' + props.num);
 
   return _react2.default.createElement(
     'div',
