@@ -35,14 +35,14 @@ app.get("*", (req, res, next) => {
 
       res.send(`
         <!DOCTYPE html>
-        <html>
+        <html style="margin:0; height:100%;">
           <head>
             <title>MC Quiz with SSR</title>
             <script src="/bundle.js" defer></script>
             <script>window.__INITIAL_DATA__ = ${serialize(data)}</script>
           </head>
-          <body>
-            <div id='app'>${markup}</div>
+          <body style="margin:0; height:100%;">
+            <div id='app' style="margin:0; height:100%;">${markup}</div>
           </body>
         </html>
       `

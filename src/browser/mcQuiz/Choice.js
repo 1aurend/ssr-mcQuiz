@@ -1,10 +1,11 @@
-import React from 'react';
+import React from 'react'
+import { choicebutton } from './quizStyles'
 
 
 function Choice(props) {
 
   return (
-    <button className='choicebutton' onClick={props.onClick}>{props.choice}</button>
+    <button style={choicebutton} onClick={props.onClick}>{props.choice}</button>
   )
 
 }

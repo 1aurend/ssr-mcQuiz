@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react'
 import Question from './Question.js'
 import Choice from './Choice.js'
-// import './quiz.css'
 import Results from './Results.js'
 import { Link } from 'react-router-dom'
+import { pagegrid, question, choices, results, questionh2 } from './quizStyles'
 
 
 function Quiz (props) {
@@ -69,11 +69,11 @@ function Quiz (props) {
 
   if (answeredCount.current < props.data.length) {
     return (
-      <div id='pagegrid'>
-        <div id='question'>
+      <div style={pagegrid}>
+        <div style={question}>
           <Question question={currentQ.questionText} />
         </div>
-        <div id='choices'>
+        <div style={choices}>
           {currentQ.choices.map(choice => {return (
             <Choice onClick={() => handleClick(choice)} choice={choice} key={choice} />)})}
         </div>
@@ -82,11 +82,11 @@ function Quiz (props) {
   }
   else {
       return (
-      <div id='pagegrid'>
-        <div id='question'>
-          <h2>End of Quiz!</h2>
+      <div style={pagegrid}>
+        <div style={question}>
+          <h2 style={questionh2}>End of Quiz!</h2>
         </div>
-        <div id='results'>
+        <div style={results}>
           <Results average={average.current} correct={correct.current} totalQs={props.data.length}/>
           <Link to='/'><button>Start Over</button></Link>
         </div>

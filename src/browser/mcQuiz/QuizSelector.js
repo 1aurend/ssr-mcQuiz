@@ -1,9 +1,10 @@
 import React from 'react'
+import { selector } from './quizStyles'
 
 function QuizSelector(props) {
 
 return (
-  <div id='selector'>
+  <div style={selector}>
     <select onChange={props.onChange}>
       <option value='1'>1</option>
       <option value='2'>2</option>
