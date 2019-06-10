@@ -9,7 +9,6 @@ function App() {
     return (
       <Switch>
         <Route path='/' exact component={Start} />
-        <Route path='/quiz' component={QuizContainer} />
       </Switch>
     )
 

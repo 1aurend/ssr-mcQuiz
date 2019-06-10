@@ -27,6 +27,7 @@
     "express": "^4.17.1",
     "nodemon": "^1.12.5",
     "react-svg-loader": "^3.0.3",
+    "vexflow": "^1.2.89",
     "webpack": "^3.10.0",
     "webpack-node-externals": "^1.6.0"
   },

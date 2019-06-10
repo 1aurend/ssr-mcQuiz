@@ -31,7 +31,6 @@ async function loadQuiz() {
 
     console.log(await Qs)
 
-    // const quizData = matchIDs(questions, answers, choices, makeQsReadable)
     console.log(JSON.stringify(questions, null, 4));
     return questions
 

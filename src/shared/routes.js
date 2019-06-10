@@ -10,11 +10,6 @@ const routes = [
     component: Start,
     needsData: true
   },
-  {
-    path: '/quiz',
-    exact: false,
-    component: QuizContainer
-  }
 
 ]
 

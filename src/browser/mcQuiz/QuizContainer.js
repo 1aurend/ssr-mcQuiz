@@ -5,10 +5,9 @@ import Quiz from './Quiz.js'
 function QuizContainer(props) {
 
   let theQs = []
-  console.log(props.location.state);
 
-  for (var i = 0; i < props.location.state.numQs; i++) {
-    theQs.push(props.location.state.data[i])
+  for (var i = 0; i < props.num; i++) {
+    theQs.push(props.data[i])
   }
 
     console.log(theQs)

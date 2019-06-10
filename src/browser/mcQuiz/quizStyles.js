@@ -71,7 +71,8 @@ let go = {
   gridColumn: 3,
   margin: 'auto',
   display: 'block',
-  cursor: 'pointer'
+  cursor: 'pointer',
+  backgroundColor: 'none',
 }
 
 export {

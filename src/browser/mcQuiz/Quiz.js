@@ -1,18 +1,19 @@
 import React, { useEffect, useState, useRef } from 'react'
-import Question from './Question.js'
-import Choice from './Choice.js'
+import Chord from './Chord'
+import Choice from './Choice'
 import Results from './Results.js'
+import Start from './Start'
 import { Link } from 'react-router-dom'
 import { pagegrid, question, choices, results, questionh2 } from './quizStyles'
 
 
 function Quiz (props) {
 
-  console.log(props.data);
-  console.log(props.data.length);
   console.log(props.data[0]);
 
   const [currentQ, nextQ] = useState(props.data[0].fields)
+  const [noteColors, flipColorSwitch] = useState(false)
+  const [reset, startOver] = useState(false)
 
   const startTime = useRef([Date.now()])
   const clickTime = useRef([])
@@ -24,12 +25,25 @@ function Quiz (props) {
   const correct = useRef(0)
 
 
-
   function handleClick(choice) {
 
     let now = Date.now()
+    let color = () => {
+      for (var i = 0; i < inputs.current.length; i++) {
+        if (inputs.current[i] === currentQ.answers[i]) {
+          return true
+        }
+        else {
+          return false
+        }
+      }
+    }
 
     Promise.resolve(inputs.current = [...inputs.current, choice]).then(() => {
+      if (color) {
+        flipColorSwitch(!noteColors)
+      }
+    }).then(() => {
        if (currentQ.answers.length === inputs.current.length) {
         clickTime.current = [...clickTime.current, now]
         startTime.current = [...startTime.current, now]
@@ -71,7 +85,7 @@ function Quiz (props) {
     return (
       <div style={pagegrid}>
         <div style={question}>
-          <Question question={currentQ.questionText} />
+          <Chord notes={currentQ.notes} octaves={currentQ.octaves} clef={currentQ.clef} inputs={inputs.current} />
         </div>
         <div style={choices}>
           {currentQ.choices.map(choice => {return (
@@ -79,6 +93,9 @@ function Quiz (props) {
         </div>
       </div>
     )
+  }
+  else if (reset) {
+    return <Start />
   }
   else {
       return (
@@ -88,7 +105,7 @@ function Quiz (props) {
         </div>
         <div style={results}>
           <Results average={average.current} correct={correct.current} totalQs={props.data.length}/>
-          <Link to='/'><button>Start Over</button></Link>
+          <button onClick={(e) => {startOver(true)}}>Start Over</button>
         </div>
       </div>
     )
