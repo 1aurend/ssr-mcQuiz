@@ -1,4 +1,4 @@
-
+const fs = require('fs')
 
 function groupChords(data) {
 
@@ -14,9 +14,9 @@ function groupChords(data) {
         clef: '',
         questions: [],
       }
-      chord.notes = data[0].fields.notes
-      chord.octaves = data[0].fields.octaves
-      chord.clef = data[0].fields.clef
+      chord.notes = data[i].fields.notes
+      chord.octaves = data[i].fields.octaves
+      chord.clef = data[i].fields.clef
 
       for (var j = i; j < i+4; j++) {
         console.log('in the second loop');
@@ -39,6 +39,7 @@ function groupChords(data) {
     }
 
     console.log('new data format: ' + JSON.stringify(chords, null, 4));
+    fs.writeFileSync('./data.json', JSON.stringify(chords, null, 4))
     return chords
 
 }

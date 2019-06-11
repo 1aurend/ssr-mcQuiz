@@ -5,7 +5,6 @@ function Chord(props) {
 
   const container = useRef(document.createElement('container'))
   const [loading, done] = useState(true)
-  console.log(props.inputs);
 
   let formattedNotes = []
   let accidentals = []
@@ -17,11 +16,10 @@ function Chord(props) {
     }
 
   let colors = []
-    for (var i = 0; i < props.inputs.length; i++) {
+    for (var i = 0; i < props.colors.length; i++) {
       for (var j = 0; j < props.notes.length; j++) {
         let noteName = props.notes[j].length === 1 ? props.notes[j] : props.notes[j].slice(0,-1)
-        console.log(noteName);
-        if (props.inputs[i] === noteName) {
+        if (props.colors[i] === noteName) {
           colors.push({key: j, color: 'chartreuse'})
         }
       }
@@ -64,9 +62,7 @@ function Chord(props) {
       }
 
       if (colors.length > 0) {
-        console.log(JSON.stringify(colors));
         for (var i = 0; i < colors.length; i++) {
-          console.log('and here!');
           notes[0].setKeyStyle(colors[i].key, { fillStyle: colors[i].color});
         }
       }
@@ -83,7 +79,7 @@ function Chord(props) {
 
     done(false)
 
-  }, [props.notes, props.inputs])
+  }, [props.notes, props.colors, loading])
 
 
   return (

@@ -2342,6 +2342,9 @@ function Start(props) {
     quizData = props.staticContext.data;
   }
 
+  // let test = quizData.slice(3)
+
+
   var _useState = (0, _react.useState)(1),
       _useState2 = _slicedToArray(_useState, 2),
       numQs = _useState2[0],
@@ -2351,8 +2354,6 @@ function Start(props) {
       _useState4 = _slicedToArray(_useState3, 2),
       ready = _useState4[0],
       launchQuiz = _useState4[1];
-
-  console.log('this is ready: ' + ready);
 
   if (!ready) {
     return _react2.default.createElement(
@@ -2364,7 +2365,7 @@ function Start(props) {
         _react2.default.createElement(
           'h2',
           { style: _quizStyles.questionh2 },
-          'Flashcard App Prototype'
+          'Music Theory Training Prototype'
         ),
         _react2.default.createElement(
           'h3',
@@ -13650,17 +13651,17 @@ function QuizSelector(props) {
       _react2.default.createElement(
         'option',
         { value: '2' },
-        '5'
+        '2'
       ),
       _react2.default.createElement(
         'option',
         { value: '3' },
-        '10'
+        '3'
       ),
       _react2.default.createElement(
         'option',
         { value: '4' },
-        '20'
+        '4'
       )
     )
   );
@@ -15475,100 +15476,131 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function Quiz(props) {
-
-  console.log(props.data[0]);
-
-  var _useState = (0, _react.useState)(props.data[0]),
+  var _useState = (0, _react.useState)(props.data[0].questions[0]),
       _useState2 = _slicedToArray(_useState, 2),
-      currentChord = _useState2[0],
-      nextChord = _useState2[1];
+      currentQ = _useState2[0],
+      nextQ = _useState2[1];
 
-  var _useState3 = (0, _react.useState)(props.data[0].questions[0]),
+  var _useState3 = (0, _react.useState)(false),
       _useState4 = _slicedToArray(_useState3, 2),
-      currentQ = _useState4[0],
-      nextQ = _useState4[1];
-  // const [noteColors, flipColorSwitch] = useState(false)
+      redrawSwitch = _useState4[0],
+      flipSwitch = _useState4[1];
 
-
-  var _useState5 = (0, _react.useState)(0),
+  var _useState5 = (0, _react.useState)(true),
       _useState6 = _slicedToArray(_useState5, 2),
       correctInput = _useState6[0],
       isCorrect = _useState6[1];
 
   var _useState7 = (0, _react.useState)(false),
       _useState8 = _slicedToArray(_useState7, 2),
-      wrongInput = _useState8[0],
-      isWrong = _useState8[1];
+      endOfQ = _useState8[0],
+      doneQ = _useState8[1];
 
   var _useState9 = (0, _react.useState)(false),
       _useState10 = _slicedToArray(_useState9, 2),
-      endOfQ = _useState10[0],
-      doneQ = _useState10[1];
+      reset = _useState10[0],
+      startOver = _useState10[1];
 
-  var _useState11 = (0, _react.useState)(false),
-      _useState12 = _slicedToArray(_useState11, 2),
-      reset = _useState12[0],
-      startOver = _useState12[1];
-
+  var currentChord = (0, _react.useRef)(props.data[0]);
+  var noteNum = (0, _react.useRef)(1);
+  var input = (0, _react.useRef)();
+  var noteColors = (0, _react.useRef)([]);
   var startTime = (0, _react.useRef)([Date.now()]);
   var clickTime = (0, _react.useRef)([]);
-  var answeredCount = (0, _react.useRef)(0);
+  var chordCount = (0, _react.useRef)(0);
+  var questionCount = (0, _react.useRef)(0);
+
   var timesLog = (0, _react.useRef)([]);
-  var responsesLog = (0, _react.useRef)([]);
-  var inputs = (0, _react.useRef)([]);
   var average = (0, _react.useRef)(0);
   var correct = (0, _react.useRef)(0);
 
   function handleClick(choice) {
 
-    inputs.current = [].concat(_toConsumableArray(inputs.current), [choice]);
+    input.current = choice;
     checkInput();
   }
 
   function checkInput() {
-    console.log('now in checkInput...' + inputs.current);
-    if (inputs.current[inputs.current.length - 1] === currentQ.answers[inputs.current.length - 1]) {
-      if (inputs.current.length === currentQ.answers.length) {
-        //lots of other things go here, maybe write an effect hook for when doneQ changes?
-        answeredCount.current = answeredCount.current + 1;
+    if (input.current === currentQ.answers[noteNum.current - 1]) {
+
+      console.log('input.current: ' + input.current);
+      console.log('noteNum.current: ' + noteNum.current);
+      console.log('answers.length: ' + currentQ.answers.length);
+
+      if (noteNum.current === currentQ.answers.length) {
+        console.log('here!');
+        noteColors.current = [].concat(_toConsumableArray(noteColors.current), [input.current]);
+        noteNum.current = noteNum.current + 1;
+        clickTime.current.push(Date.now());
+        questionCount.current = questionCount.current + 1;
+        console.log('next Q: ' + questionCount.current);
+        flipSwitch(!redrawSwitch);
         doneQ(true);
       } else {
-        isCorrect(correctInput + 1);
-        isWrong(false);
-        console.log('this is correctInput: ' + correctInput);
+        noteColors.current = [].concat(_toConsumableArray(noteColors.current), [input.current]);
+        noteNum.current = noteNum.current + 1;
+        flipSwitch(!redrawSwitch);
+        isCorrect(true);
       }
     } else {
-      console.log('getting here instead');
-      isWrong(true);
+      flipSwitch(!redrawSwitch);
+      isCorrect(false);
     }
   }
 
-  function doMath() {
+  (0, _react.useEffect)(function () {
 
-    var time = (clickTime.current[clickTime.current.length - 1] - startTime.current[answeredCount.current - 1]) / 1000;
-    console.log('math= ' + time);
-    timesLog.current = [].concat(_toConsumableArray(timesLog.current), [time]);
-
-    console.log('reponses so far: ' + JSON.stringify(responsesLog.current));
-    if (JSON.stringify(responsesLog.current[responsesLog.current.length - 1].answer) === JSON.stringify(responsesLog.current[responsesLog.current.length - 1].input)) {
-      correct.current = correct.current + 1;
-      console.log('number correct = ' + correct.current);
+    if (endOfQ === true) {
+      console.log('now here!');
+      setTimeout(function () {
+        input.current = null;
+        noteColors.current = [];
+        noteNum.current = 1;
+        startTime.current.push(Date.now());
+        if (questionCount.current < currentChord.current.questions.length) {
+          console.log('here!');
+          console.log(JSON.stringify(currentChord.current.questions[questionCount.current], null, 4));
+          nextQ(currentChord.current.questions[questionCount.current]);
+          doneQ(false);
+        } else {
+          chordCount.current = chordCount.current + 1;
+          questionCount.current = 0;
+          if (chordCount.current < props.data.length) {
+            currentChord.current = props.data[chordCount.current];
+            console.log('this is chord ' + JSON.stringify(currentChord.current, null, 4));
+            nextQ(props.data[chordCount.current].questions[questionCount.current]);
+            doneQ(false);
+          } else {
+            doneQ(false);
+          }
+        }
+      }, 1000);
     }
+  }, [endOfQ]);
 
-    if (answeredCount.current === props.data.length) {
-      var mean = function mean(arr) {
-        return arr.reduce(function (a, b) {
-          return a + b;
-        }, 0) / arr.length;
-      };
-      average.current = mean(timesLog.current);
-      nextQ(null);
-    }
-  }
+  // function doMath() {
+  //
+  //   let time = (clickTime.current[(clickTime.current.length-1)]-startTime.current[(chordCount.current-1)])/1000
+  //   console.log('math= ' + time)
+  //   timesLog.current = [...timesLog.current, time]
+  //
+  //   console.log('reponses so far: ' + JSON.stringify(responsesLog.current));
+  //   if (JSON.stringify(responsesLog.current[responsesLog.current.length-1].answer) === JSON.stringify(responsesLog.current[responsesLog.current.length-1].input)) {
+  //     correct.current = correct.current+1
+  //     console.log('number correct = ' + correct.current);
+  //   }
+  //
+  //   if (chordCount.current === props.data.length) {
+  //     const mean = arr => arr.reduce((a,b) => a + b, 0) / arr.length
+  //     average.current = mean(timesLog.current)
+  //     nextQ(null)
+  //   }
+  //
+  // }
 
-  if (correctInput < 3) {
-    console.log('this is wrongInput ' + wrongInput);
-    if (!wrongInput) {
+
+  if (noteNum.current - 1 < currentQ.answers.length && chordCount.current !== props.data.length) {
+    if (correctInput || correctInput === null) {
       return _react2.default.createElement(
         'div',
         { style: _quizStyles.pagegrid },
@@ -15580,7 +15612,7 @@ function Quiz(props) {
             { style: _quizStyles.questiontext },
             currentQ.questionText
           ),
-          _react2.default.createElement(_Chord2.default, { notes: currentChord.notes, octaves: currentChord.octaves, clef: currentChord.clef, inputs: inputs.current })
+          _react2.default.createElement(_Chord2.default, { notes: currentChord.current.notes, octaves: currentChord.current.octaves, clef: currentChord.current.clef, colors: noteColors.current })
         ),
         _react2.default.createElement(
           'div',
@@ -15592,7 +15624,7 @@ function Quiz(props) {
           })
         )
       );
-    } else if (wrongInput) {
+    } else if (!correctInput) {
       return _react2.default.createElement(
         'div',
         { style: _quizStyles.pagegrid },
@@ -15604,7 +15636,7 @@ function Quiz(props) {
             { style: _quizStyles.questiontext },
             currentQ.questionText
           ),
-          _react2.default.createElement(_Chord2.default, { notes: currentChord.notes, octaves: currentChord.octaves, clef: currentChord.clef, inputs: inputs.current })
+          _react2.default.createElement(_Chord2.default, { notes: currentChord.current.notes, octaves: currentChord.current.octaves, clef: currentChord.current.clef, colors: noteColors.current })
         ),
         _react2.default.createElement(
           'div',
@@ -15612,14 +15644,43 @@ function Quiz(props) {
           currentQ.choices.map(function (choice) {
             return _react2.default.createElement(_Choice2.default, { onClick: function onClick() {
                 return handleClick(choice);
-              }, choice: choice, key: choice, style: 'red' });
+              }, choice: choice, key: choice, input: input.current, wrong: true });
           })
         )
       );
     }
   } else if (reset) {
     return _react2.default.createElement(_Start2.default, null);
-  } else {
+  } else if (noteNum.current - 1 === currentQ.answers.length && chordCount.current !== props.data.length) {
+    return _react2.default.createElement(
+      'div',
+      { style: _quizStyles.pagegrid },
+      _react2.default.createElement(
+        'div',
+        { style: _quizStyles.question },
+        _react2.default.createElement(
+          'h2',
+          { style: _quizStyles.questiontext },
+          currentQ.questionText
+        ),
+        _react2.default.createElement(_Chord2.default, { notes: currentChord.current.notes, octaves: currentChord.current.octaves, clef: currentChord.current.clef, colors: noteColors.current }),
+        _react2.default.createElement(
+          'h2',
+          null,
+          'that\'s right!'
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { style: _quizStyles.choices },
+        currentQ.choices.map(function (choice) {
+          return _react2.default.createElement(_Choice2.default, { onClick: function onClick() {
+              return handleClick(choice);
+            }, choice: choice, key: choice });
+        })
+      )
+    );
+  } else if (chordCount.current === props.data.length) {
     return _react2.default.createElement(
       'div',
       { style: _quizStyles.pagegrid },
@@ -15635,7 +15696,7 @@ function Quiz(props) {
       _react2.default.createElement(
         'div',
         { style: _quizStyles.results },
-        _react2.default.createElement(_Results2.default, { average: average.current, correct: correct.current, totalQs: props.data.length }),
+        _react2.default.createElement(_Results2.default, { average: average.current, times: clickTime.current, startTimes: startTime.current }),
         _react2.default.createElement(
           'button',
           { onClick: function onClick(e) {
@@ -15678,8 +15739,6 @@ function Chord(props) {
       loading = _useState2[0],
       done = _useState2[1];
 
-  console.log(props.inputs);
-
   var formattedNotes = [];
   var accidentals = [];
   for (var i = 0; i < props.notes.length; i++) {
@@ -15690,11 +15749,10 @@ function Chord(props) {
   }
 
   var colors = [];
-  for (var i = 0; i < props.inputs.length; i++) {
+  for (var i = 0; i < props.colors.length; i++) {
     for (var j = 0; j < props.notes.length; j++) {
       var noteName = props.notes[j].length === 1 ? props.notes[j] : props.notes[j].slice(0, -1);
-      console.log(noteName);
-      if (props.inputs[i] === noteName) {
+      if (props.colors[i] === noteName) {
         colors.push({ key: j, color: 'chartreuse' });
       }
     }
@@ -15735,9 +15793,7 @@ function Chord(props) {
       }
 
       if (colors.length > 0) {
-        console.log(JSON.stringify(colors));
         for (var i = 0; i < colors.length; i++) {
-          console.log('and here!');
           notes[0].setKeyStyle(colors[i].key, { fillStyle: colors[i].color });
         }
       }
@@ -15751,7 +15807,7 @@ function Chord(props) {
     }
 
     done(false);
-  }, [props.notes, props.inputs]);
+  }, [props.notes, props.colors, loading]);
 
   return _react2.default.createElement('div', { ref: container, style: {
       display: "block",
@@ -22442,7 +22498,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function Choice(props) {
 
-  var style = _extends({}, _quizStyles.choicebutton, { backgroundColor: props.style });
+  var style = _quizStyles.choicebutton;
+
+  if (props.wrong) {
+    if (props.choice === props.input) {
+      style = _extends({}, style, { backgroundColor: 'red' });
+    }
+  }
 
   return _react2.default.createElement(
     'button',
@@ -22472,6 +22534,22 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function Results(props) {
 
+  console.log(props.startTimes);
+  console.log(props.times);
+
+  var times = [];
+
+  for (var i = 0; i < props.times.length; i++) {
+    times.push((props.times[i] - props.startTimes[i]) / 1000);
+  }
+
+  var mean = function mean(arr) {
+    return arr.reduce(function (a, b) {
+      return a + b;
+    }, 0) / arr.length;
+  };
+  var average = mean(times);
+
   return _react2.default.createElement(
     _react2.default.Fragment,
     null,
@@ -22483,15 +22561,7 @@ function Results(props) {
     _react2.default.createElement(
       'p',
       null,
-      props.correct,
-      ' out of ',
-      props.totalQs,
-      ' correct'
-    ),
-    _react2.default.createElement(
-      'p',
-      null,
-      props.average,
+      average,
       ' seconds average per flashcard'
     )
   );

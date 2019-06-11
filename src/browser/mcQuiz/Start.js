@@ -14,16 +14,17 @@ function Start(props) {
       quizData = props.staticContext.data
     }
 
+    // let test = quizData.slice(3)
+
 
   const [numQs, setNum] = useState(1)
   const [ready, launchQuiz] = useState(false)
-  console.log('this is ready: ' + ready);
 
   if (!ready) {
     return (
       <div style={pagegrid}>
         <div style={question}>
-          <h2 style={questionh2}>Flashcard App Prototype</h2>
+          <h2 style={questionh2}>Music Theory Training Prototype</h2>
           <h3 style={questionh3}>Choose a number of chords (1 chord = 4 questions) to try it.</h3>
         </div>
         <div style={startinputs}>
