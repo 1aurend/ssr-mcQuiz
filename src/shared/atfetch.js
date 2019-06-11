@@ -1,6 +1,7 @@
 import makeQsReadable from '../server/tools/makeqsreadable'
 import matchIDs from '../server/tools/matchids'
 import Airtable from 'airtable'
+import groupChords from '../server/tools/groupChords'
 
 require('dotenv').config()
 
@@ -9,14 +10,13 @@ async function loadQuiz() {
 
   const ldBase = new Airtable({apiKey: process.env.LD_AT_KEY}).base(process.env.LD_BASE_ID)
 
-    let questions = []
-    let choices = []
-    let answers = []
+    let data = []
+
     console.log(`Fetching Quiz Data -----------------------`);
 
 
     const Qs = ldBase('mtQuestions').select({
-          maxRecords: 500,
+          maxRecords: 16,
           view: "Grid view"
       }).eachPage(function page(records, fetchNextPage) {
 
@@ -31,8 +31,9 @@ async function loadQuiz() {
 
     console.log(await Qs)
 
-    console.log(JSON.stringify(questions, null, 4));
-    return questions
+    const chords = groupChords(data)
+    console.log(chords)
+    return chords
 
     }
 

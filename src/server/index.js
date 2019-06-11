@@ -21,7 +21,7 @@ app.get("*", (req, res, next) => {
     (route) => matchPath(req.url, route)
   ) || {}
 
-  const data = reqRoute.needsData ? loadQuiz(matchIDs) : Promise.resolve()
+  const data = reqRoute.needsData ? loadQuiz() : Promise.resolve()
 
   data.then((data) => {
 

@@ -1494,7 +1494,7 @@ var choices = {
   gridColumn: 2,
   gridRow: 3,
   display: 'grid',
-  gridTemplateColumns: 'repeat(5, 1fr)',
+  gridTemplateColumns: 'repeat(7, 1fr)',
   width: 'inherit',
   height: 'inherit'
 };
