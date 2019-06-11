@@ -24,7 +24,7 @@ function Start(props) {
       <div style={pagegrid}>
         <div style={question}>
           <h2 style={questionh2}>Flashcard App Prototype</h2>
-          <h3 style={questionh3}>Choose a number of flashcards to try it.</h3>
+          <h3 style={questionh3}>Choose a number of chords (1 chord = 4 questions) to try it.</h3>
         </div>
         <div style={startinputs}>
           <QuizSelector onChange={(e) => {setNum(e.target.value)}}/>

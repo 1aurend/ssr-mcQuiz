@@ -26,6 +26,11 @@ let questionh3 = {
   paddingTop: '50px',
 }
 
+let questiontext ={
+  textAlign: 'center',
+  paddingTop: '10px'
+}
+
 let choices = {
   gridColumn: 2,
   gridRow: 3,
@@ -86,5 +91,6 @@ export {
   startinputs,
   selector,
   select,
-  go
+  go,
+  questiontext
 }

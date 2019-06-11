@@ -22,7 +22,7 @@ async function loadQuiz() {
 
           records.forEach(function(record) {
               console.log('Retrieved', record.get('questionText'));
-              questions.push(record._rawJson)
+              data.push(record._rawJson)
           })
           fetchNextPage()
 

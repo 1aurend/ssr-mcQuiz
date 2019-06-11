@@ -4,16 +4,16 @@ import Quiz from './Quiz.js'
 
 function QuizContainer(props) {
 
-  let theQs = []
+  let quiz = []
 
   for (var i = 0; i < props.num; i++) {
-    theQs.push(props.data[i])
+    quiz.push(props.data[i])
   }
 
-    console.log(theQs)
+  //// TODO: add a randomizer function here
 
     return (
-      <Quiz data={theQs} />
+      <Quiz data={quiz} />
     )
 
   }

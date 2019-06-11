@@ -1490,6 +1490,11 @@ var questionh3 = {
   paddingTop: '50px'
 };
 
+var questiontext = {
+  textAlign: 'center',
+  paddingTop: '10px'
+};
+
 var choices = {
   gridColumn: 2,
   gridRow: 3,
@@ -1550,6 +1555,7 @@ exports.startinputs = startinputs;
 exports.selector = selector;
 exports.select = select;
 exports.go = go;
+exports.questiontext = questiontext;
 
 /***/ }),
 /* 8 */
@@ -2363,7 +2369,7 @@ function Start(props) {
         _react2.default.createElement(
           'h3',
           { style: _quizStyles.questionh3 },
-          'Choose a number of flashcards to try it.'
+          'Choose a number of chords (1 chord = 4 questions) to try it.'
         )
       ),
       _react2.default.createElement(
@@ -3789,15 +3795,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function QuizContainer(props) {
 
-  var theQs = [];
+  var quiz = [];
 
   for (var i = 0; i < props.num; i++) {
-    theQs.push(props.data[i]);
+    quiz.push(props.data[i]);
   }
 
-  console.log(theQs);
+  //// TODO: add a randomizer function here
 
-  return _react2.default.createElement(_Quiz2.default, { data: theQs });
+  return _react2.default.createElement(_Quiz2.default, { data: quiz });
 }
 
 exports.default = QuizContainer;
@@ -13643,23 +13649,18 @@ function QuizSelector(props) {
       ),
       _react2.default.createElement(
         'option',
-        { value: '5' },
+        { value: '2' },
         '5'
       ),
       _react2.default.createElement(
         'option',
-        { value: '10' },
+        { value: '3' },
         '10'
       ),
       _react2.default.createElement(
         'option',
-        { value: '20' },
+        { value: '4' },
         '20'
-      ),
-      _react2.default.createElement(
-        'option',
-        { value: '30' },
-        '30'
       )
     )
   );
@@ -15477,20 +15478,37 @@ function Quiz(props) {
 
   console.log(props.data[0]);
 
-  var _useState = (0, _react.useState)(props.data[0].fields),
+  var _useState = (0, _react.useState)(props.data[0]),
       _useState2 = _slicedToArray(_useState, 2),
-      currentQ = _useState2[0],
-      nextQ = _useState2[1];
+      currentChord = _useState2[0],
+      nextChord = _useState2[1];
 
-  var _useState3 = (0, _react.useState)(false),
+  var _useState3 = (0, _react.useState)(props.data[0].questions[0]),
       _useState4 = _slicedToArray(_useState3, 2),
-      noteColors = _useState4[0],
-      flipColorSwitch = _useState4[1];
+      currentQ = _useState4[0],
+      nextQ = _useState4[1];
+  // const [noteColors, flipColorSwitch] = useState(false)
 
-  var _useState5 = (0, _react.useState)(false),
+
+  var _useState5 = (0, _react.useState)(0),
       _useState6 = _slicedToArray(_useState5, 2),
-      reset = _useState6[0],
-      startOver = _useState6[1];
+      correctInput = _useState6[0],
+      isCorrect = _useState6[1];
+
+  var _useState7 = (0, _react.useState)(false),
+      _useState8 = _slicedToArray(_useState7, 2),
+      wrongInput = _useState8[0],
+      isWrong = _useState8[1];
+
+  var _useState9 = (0, _react.useState)(false),
+      _useState10 = _slicedToArray(_useState9, 2),
+      endOfQ = _useState10[0],
+      doneQ = _useState10[1];
+
+  var _useState11 = (0, _react.useState)(false),
+      _useState12 = _slicedToArray(_useState11, 2),
+      reset = _useState12[0],
+      startOver = _useState12[1];
 
   var startTime = (0, _react.useRef)([Date.now()]);
   var clickTime = (0, _react.useRef)([]);
@@ -15503,38 +15521,26 @@ function Quiz(props) {
 
   function handleClick(choice) {
 
-    var now = Date.now();
-    var color = function color() {
-      for (var i = 0; i < inputs.current.length; i++) {
-        if (inputs.current[i] === currentQ.answers[i]) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    };
+    inputs.current = [].concat(_toConsumableArray(inputs.current), [choice]);
+    checkInput();
+  }
 
-    Promise.resolve(inputs.current = [].concat(_toConsumableArray(inputs.current), [choice])).then(function () {
-      if (color) {
-        flipColorSwitch(!noteColors);
-      }
-    }).then(function () {
-      if (currentQ.answers.length === inputs.current.length) {
-        clickTime.current = [].concat(_toConsumableArray(clickTime.current), [now]);
-        startTime.current = [].concat(_toConsumableArray(startTime.current), [now]);
+  function checkInput() {
+    console.log('now in checkInput...' + inputs.current);
+    if (inputs.current[inputs.current.length - 1] === currentQ.answers[inputs.current.length - 1]) {
+      if (inputs.current.length === currentQ.answers.length) {
+        //lots of other things go here, maybe write an effect hook for when doneQ changes?
         answeredCount.current = answeredCount.current + 1;
-        responsesLog.current = [].concat(_toConsumableArray(responsesLog.current), [{ input: inputs.current, answer: currentQ.answers }]);
+        doneQ(true);
+      } else {
+        isCorrect(correctInput + 1);
+        isWrong(false);
+        console.log('this is correctInput: ' + correctInput);
       }
-    }).then(function () {
-      if (currentQ.answers.length === inputs.current.length) {
-        doMath();
-      }
-    }).then(function () {
-      if (currentQ.answers.length === inputs.current.length && answeredCount.current < props.data.length) {
-        inputs.current = [];
-        nextQ(props.data[answeredCount.current].fields);
-      }
-    });
+    } else {
+      console.log('getting here instead');
+      isWrong(true);
+    }
   }
 
   function doMath() {
@@ -15560,25 +15566,57 @@ function Quiz(props) {
     }
   }
 
-  if (answeredCount.current < props.data.length) {
-    return _react2.default.createElement(
-      'div',
-      { style: _quizStyles.pagegrid },
-      _react2.default.createElement(
+  if (correctInput < 3) {
+    console.log('this is wrongInput ' + wrongInput);
+    if (!wrongInput) {
+      return _react2.default.createElement(
         'div',
-        { style: _quizStyles.question },
-        _react2.default.createElement(_Chord2.default, { notes: currentQ.notes, octaves: currentQ.octaves, clef: currentQ.clef, inputs: inputs.current })
-      ),
-      _react2.default.createElement(
+        { style: _quizStyles.pagegrid },
+        _react2.default.createElement(
+          'div',
+          { style: _quizStyles.question },
+          _react2.default.createElement(
+            'h2',
+            { style: _quizStyles.questiontext },
+            currentQ.questionText
+          ),
+          _react2.default.createElement(_Chord2.default, { notes: currentChord.notes, octaves: currentChord.octaves, clef: currentChord.clef, inputs: inputs.current })
+        ),
+        _react2.default.createElement(
+          'div',
+          { style: _quizStyles.choices },
+          currentQ.choices.map(function (choice) {
+            return _react2.default.createElement(_Choice2.default, { onClick: function onClick() {
+                return handleClick(choice);
+              }, choice: choice, key: choice });
+          })
+        )
+      );
+    } else if (wrongInput) {
+      return _react2.default.createElement(
         'div',
-        { style: _quizStyles.choices },
-        currentQ.choices.map(function (choice) {
-          return _react2.default.createElement(_Choice2.default, { onClick: function onClick() {
-              return handleClick(choice);
-            }, choice: choice, key: choice });
-        })
-      )
-    );
+        { style: _quizStyles.pagegrid },
+        _react2.default.createElement(
+          'div',
+          { style: _quizStyles.question },
+          _react2.default.createElement(
+            'h2',
+            { style: _quizStyles.questiontext },
+            currentQ.questionText
+          ),
+          _react2.default.createElement(_Chord2.default, { notes: currentChord.notes, octaves: currentChord.octaves, clef: currentChord.clef, inputs: inputs.current })
+        ),
+        _react2.default.createElement(
+          'div',
+          { style: _quizStyles.choices },
+          currentQ.choices.map(function (choice) {
+            return _react2.default.createElement(_Choice2.default, { onClick: function onClick() {
+                return handleClick(choice);
+              }, choice: choice, key: choice, style: 'red' });
+          })
+        )
+      );
+    }
   } else if (reset) {
     return _react2.default.createElement(_Start2.default, null);
   } else {
@@ -22392,6 +22430,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
@@ -22402,9 +22442,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function Choice(props) {
 
+  var style = _extends({}, _quizStyles.choicebutton, { backgroundColor: props.style });
+
   return _react2.default.createElement(
     'button',
-    { style: _quizStyles.choicebutton, onClick: props.onClick },
+    { style: style, onClick: props.onClick },
     props.choice
   );
 }

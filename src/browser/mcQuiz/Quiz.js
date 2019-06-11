@@ -4,15 +4,19 @@ import Choice from './Choice'
 import Results from './Results.js'
 import Start from './Start'
 import { Link } from 'react-router-dom'
-import { pagegrid, question, choices, results, questionh2 } from './quizStyles'
+import { pagegrid, question, choices, results, questionh2, questiontext } from './quizStyles'
 
 
 function Quiz (props) {
 
   console.log(props.data[0]);
 
-  const [currentQ, nextQ] = useState(props.data[0].fields)
-  const [noteColors, flipColorSwitch] = useState(false)
+  const [currentChord, nextChord] = useState(props.data[0])
+  const [currentQ, nextQ] = useState(props.data[0].questions[0])
+  // const [noteColors, flipColorSwitch] = useState(false)
+  const [correctInput, isCorrect] = useState(0)
+  const [wrongInput, isWrong] = useState(false)
+  const [endOfQ, doneQ] = useState(false)
   const [reset, startOver] = useState(false)
 
   const startTime = useRef([Date.now()])
@@ -27,37 +31,28 @@ function Quiz (props) {
 
   function handleClick(choice) {
 
-    let now = Date.now()
-    let color = () => {
-      for (var i = 0; i < inputs.current.length; i++) {
-        if (inputs.current[i] === currentQ.answers[i]) {
-          return true
-        }
-        else {
-          return false
-        }
+    inputs.current = [...inputs.current, choice]
+    checkInput()
+  }
+
+  function checkInput() {
+    console.log('now in checkInput...' + inputs.current);
+    if (inputs.current[inputs.current.length-1] === currentQ.answers[inputs.current.length-1]) {
+      if (inputs.current.length === currentQ.answers.length) {
+        //lots of other things go here, maybe write an effect hook for when doneQ changes?
+        answeredCount.current = answeredCount.current+1
+        doneQ(true)
+      }
+      else {
+        isCorrect(correctInput+1)
+        isWrong(false)
+        console.log('this is correctInput: ' + correctInput);
       }
     }
-
-    Promise.resolve(inputs.current = [...inputs.current, choice]).then(() => {
-      if (color) {
-        flipColorSwitch(!noteColors)
-      }
-    }).then(() => {
-       if (currentQ.answers.length === inputs.current.length) {
-        clickTime.current = [...clickTime.current, now]
-        startTime.current = [...startTime.current, now]
-        answeredCount.current = answeredCount.current+1
-        responsesLog.current = [...responsesLog.current, {input: inputs.current, answer: currentQ.answers}]
-      }}).then(() =>
-        { if (currentQ.answers.length === inputs.current.length) {
-        doMath()
-      }}).then(() =>
-        { if (currentQ.answers.length === inputs.current.length && answeredCount.current < props.data.length) {
-        inputs.current = []
-        nextQ(props.data[answeredCount.current].fields)
-      }})
-
+    else {
+      console.log('getting here instead');
+      isWrong(true)
+    }
   }
 
   function doMath() {
@@ -81,18 +76,37 @@ function Quiz (props) {
   }
 
 
-  if (answeredCount.current < props.data.length) {
-    return (
-      <div style={pagegrid}>
-        <div style={question}>
-          <Chord notes={currentQ.notes} octaves={currentQ.octaves} clef={currentQ.clef} inputs={inputs.current} />
+  if (correctInput < 3) {
+    console.log('this is wrongInput ' + wrongInput);
+    if (!wrongInput) {
+      return (
+        <div style={pagegrid}>
+          <div style={question}>
+            <h2 style={questiontext}>{currentQ.questionText}</h2>
+            <Chord notes={currentChord.notes} octaves={currentChord.octaves} clef={currentChord.clef} inputs={inputs.current} />
+          </div>
+          <div style={choices}>
+            {currentQ.choices.map(choice => {return (
+              <Choice onClick={() => handleClick(choice)} choice={choice} key={choice} />)})}
+          </div>
         </div>
-        <div style={choices}>
-          {currentQ.choices.map(choice => {return (
-            <Choice onClick={() => handleClick(choice)} choice={choice} key={choice} />)})}
+      )
+    }
+    else if (wrongInput) {
+      return (
+        <div style={pagegrid}>
+          <div style={question}>
+            <h2 style={questiontext}>{currentQ.questionText}</h2>
+            <Chord notes={currentChord.notes} octaves={currentChord.octaves} clef={currentChord.clef} inputs={inputs.current} />
+          </div>
+          <div style={choices}>
+            {currentQ.choices.map(choice => {return (
+              <Choice onClick={() => handleClick(choice)} choice={choice} key={choice} style='red' />)})}
+          </div>
         </div>
-      </div>
-    )
+      )
+    }
+
   }
   else if (reset) {
     return <Start />
