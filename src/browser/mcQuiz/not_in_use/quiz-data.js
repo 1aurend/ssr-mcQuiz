@@ -95,6 +95,9 @@ const data = [
       'D',
       'E',
     ]
+  },
+  {
+    test: 'test'
   }
 ]
 
