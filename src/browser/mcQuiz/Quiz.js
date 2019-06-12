@@ -88,6 +88,7 @@ function Quiz (props) {
         else {
           chordCount.current = chordCount.current+1
           questionCount.current = 0
+          answersSideBar.current = []
           if (chordCount.current < props.data.length) {
             currentChord.current = props.data[chordCount.current]
             console.log('this is chord ' + JSON.stringify(currentChord.current, null, 4));
