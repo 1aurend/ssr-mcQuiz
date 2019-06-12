@@ -6,7 +6,7 @@ function Choice(props) {
 
   let style = choicebutton
 
-if (props.wrong) {
+if (!props.redButton) {
   if (props.choice === props.input) {
     style = {...style, backgroundColor: 'red'}
   }

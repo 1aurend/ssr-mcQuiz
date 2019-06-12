@@ -14,11 +14,13 @@ function Results(props) {
 
   const mean = arr => arr.reduce((a,b) => a + b, 0) / arr.length
   let average = mean(times)
+  let tries = mean(props.tries)
 
   return (
     <React.Fragment>
       <h2>Your Results:</h2>
-      <p>{average} seconds average per flashcard</p>
+      <p>{average} seconds average per question</p>
+      <p>{tries} tries average per question</p>
     </React.Fragment>
   )
 

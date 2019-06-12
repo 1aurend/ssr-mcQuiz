@@ -80,6 +80,19 @@ let go = {
   backgroundColor: 'none',
 }
 
+let sidebar = {
+  gridColumn: 2,
+  gridRow: 2,
+  textAlign: 'right',
+  paddingRight: '50px'
+}
+
+let sidebarh4 = {
+  marginBottom: '5px',
+  marginTop: '5px',
+  color: 'chartreuse',
+}
+
 export {
   question,
   pagegrid,
@@ -92,5 +105,7 @@ export {
   selector,
   select,
   go,
-  questiontext
+  questiontext,
+  sidebar,
+  sidebarh4
 }
