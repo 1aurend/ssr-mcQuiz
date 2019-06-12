@@ -421,6 +421,126 @@ module.exports = invariant;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var pagegrid = {
+  display: 'grid',
+  gridTemplateColumns: '200px auto 200px',
+  gridTemplateRows: '100px auto 200px 100px',
+  height: '100%',
+  width: '100%'
+};
+
+var question = {
+  gridColumn: 2,
+  gridRow: 2,
+  border: '5px solid black',
+  margin: '50px'
+};
+
+var questionh2 = {
+  marginTop: 'auto',
+  textAlign: 'center',
+  paddingTop: '200px'
+};
+
+var questionh3 = {
+  marginTop: 'auto',
+  textAlign: 'center',
+  paddingTop: '50px'
+};
+
+var questiontext = {
+  textAlign: 'center',
+  paddingTop: '10px'
+};
+
+var choices = {
+  gridColumn: 2,
+  gridRow: 3,
+  display: 'grid',
+  gridTemplateColumns: 'repeat(7, 1fr)',
+  width: 'inherit',
+  height: 'inherit'
+};
+
+var choicebutton = {
+  border: '5px solid black',
+  borderRadius: '5%',
+  cursor: 'pointer'
+};
+
+var results = {
+  gridColumn: 2,
+  gridRow: 3,
+  margin: 'auto',
+  textAlign: 'center'
+};
+
+var startinputs = {
+  gridColumn: 2,
+  gridRow: 3,
+  display: 'grid',
+  gridTemplateColumns: 'repeat(5, 1fr)',
+  width: 'inherit',
+  height: 'inherit'
+};
+
+var selector = {
+  gridColumn: 3,
+  margin: 'auto'
+};
+
+var select = {
+  height: '3rem',
+  fontSize: '20px'
+};
+
+var go = {
+  gridColumn: 3,
+  margin: 'auto',
+  display: 'block',
+  cursor: 'pointer',
+  backgroundColor: 'none'
+};
+
+var sidebar = {
+  gridColumn: 2,
+  gridRow: 2,
+  textAlign: 'right',
+  paddingRight: '50px'
+};
+
+var sidebarh4 = {
+  marginBottom: '5px',
+  marginTop: '5px',
+  color: 'chartreuse'
+};
+
+exports.question = question;
+exports.pagegrid = pagegrid;
+exports.questionh2 = questionh2;
+exports.questionh3 = questionh3;
+exports.choices = choices;
+exports.choicebutton = choicebutton;
+exports.results = results;
+exports.startinputs = startinputs;
+exports.selector = selector;
+exports.select = select;
+exports.go = go;
+exports.questiontext = questiontext;
+exports.sidebar = sidebar;
+exports.sidebarh4 = sidebarh4;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
 Object.defineProperty(exports, "__esModule", {
@@ -1357,7 +1477,7 @@ exports.createPath = createPath;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1451,111 +1571,6 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 
 	return to;
 };
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var pagegrid = {
-  display: 'grid',
-  gridTemplateColumns: '200px auto 200px',
-  gridTemplateRows: '100px auto 200px 100px',
-  height: '100%',
-  width: '100%'
-};
-
-var question = {
-  gridColumn: 2,
-  gridRow: 2,
-  border: '5px solid black',
-  margin: '50px'
-};
-
-var questionh2 = {
-  marginTop: 'auto',
-  textAlign: 'center',
-  paddingTop: '200px'
-};
-
-var questionh3 = {
-  marginTop: 'auto',
-  textAlign: 'center',
-  paddingTop: '50px'
-};
-
-var questiontext = {
-  textAlign: 'center',
-  paddingTop: '10px'
-};
-
-var choices = {
-  gridColumn: 2,
-  gridRow: 3,
-  display: 'grid',
-  gridTemplateColumns: 'repeat(7, 1fr)',
-  width: 'inherit',
-  height: 'inherit'
-};
-
-var choicebutton = {
-  border: '5px solid black',
-  borderRadius: '5%',
-  cursor: 'pointer'
-};
-
-var results = {
-  gridColumn: 2,
-  gridRow: 3,
-  margin: 'auto',
-  textAlign: 'center'
-};
-
-var startinputs = {
-  gridColumn: 2,
-  gridRow: 3,
-  display: 'grid',
-  gridTemplateColumns: 'repeat(5, 1fr)',
-  width: 'inherit',
-  height: 'inherit'
-};
-
-var selector = {
-  gridColumn: 3,
-  margin: 'auto'
-};
-
-var select = {
-  height: '3rem',
-  fontSize: '20px'
-};
-
-var go = {
-  gridColumn: 3,
-  margin: 'auto',
-  display: 'block',
-  cursor: 'pointer',
-  backgroundColor: 'none'
-};
-
-exports.question = question;
-exports.pagegrid = pagegrid;
-exports.questionh2 = questionh2;
-exports.questionh3 = questionh3;
-exports.choices = choices;
-exports.choicebutton = choicebutton;
-exports.results = results;
-exports.startinputs = startinputs;
-exports.selector = selector;
-exports.select = select;
-exports.go = go;
-exports.questiontext = questiontext;
 
 /***/ }),
 /* 8 */
@@ -2317,7 +2332,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _quizStyles = __webpack_require__(7);
+var _quizStyles = __webpack_require__(5);
 
 var _QuizSelector = __webpack_require__(42);
 
@@ -2430,7 +2445,7 @@ var _invariant = __webpack_require__(4);
 
 var _invariant2 = _interopRequireDefault(_invariant);
 
-var _history = __webpack_require__(5);
+var _history = __webpack_require__(6);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2581,7 +2596,7 @@ var _propTypes = __webpack_require__(2);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _history = __webpack_require__(5);
+var _history = __webpack_require__(6);
 
 var _Router = __webpack_require__(8);
 
@@ -3244,7 +3259,7 @@ var _invariant = __webpack_require__(4);
 
 var _invariant2 = _interopRequireDefault(_invariant);
 
-var _history = __webpack_require__(5);
+var _history = __webpack_require__(6);
 
 var _generatePath = __webpack_require__(15);
 
@@ -3407,7 +3422,7 @@ var _propTypes = __webpack_require__(2);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _history = __webpack_require__(5);
+var _history = __webpack_require__(6);
 
 var _Router = __webpack_require__(8);
 
@@ -3854,7 +3869,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var k = __webpack_require__(6),
+var k = __webpack_require__(7),
     n = "function" === typeof Symbol && Symbol.for,
     p = n ? Symbol.for("react.element") : 60103,
     q = n ? Symbol.for("react.portal") : 60106,
@@ -4042,7 +4057,7 @@ if (process.env.NODE_ENV !== "production") {
   (function () {
     'use strict';
 
-    var _assign = __webpack_require__(6);
+    var _assign = __webpack_require__(7);
     var checkPropTypes = __webpack_require__(10);
 
     // TODO: this is special because it gets imported during build.
@@ -5987,7 +6002,7 @@ if (process.env.NODE_ENV === 'production') {
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var aa = __webpack_require__(0),
-    n = __webpack_require__(6),
+    n = __webpack_require__(7),
     r = __webpack_require__(16);function ba(a, b, c, d, e, f, g, h) {
   if (!a) {
     a = void 0;if (void 0 === b) a = Error("Minified exception occurred; use the non-minified dev environment for the full error message and additional helpful warnings.");else {
@@ -9232,7 +9247,7 @@ if (process.env.NODE_ENV !== "production") {
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
- */var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};if(process.env.NODE_ENV!=="production"){(function(){'use strict';var React=__webpack_require__(0);var _assign=__webpack_require__(6);var checkPropTypes=__webpack_require__(10);var scheduler=__webpack_require__(16);var tracing=__webpack_require__(38);/**
+ */var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};if(process.env.NODE_ENV!=="production"){(function(){'use strict';var React=__webpack_require__(0);var _assign=__webpack_require__(7);var checkPropTypes=__webpack_require__(10);var scheduler=__webpack_require__(16);var tracing=__webpack_require__(38);/**
  * Use invariant() to assert state which your program assumes to be true.
  *
  * Provide sprintf-style format (only %s is supported) and arguments
@@ -13601,7 +13616,7 @@ var _QuizContainer = __webpack_require__(29);
 
 var _QuizContainer2 = _interopRequireDefault(_QuizContainer);
 
-var _reactRouter = __webpack_require__(72);
+var _reactRouter = __webpack_require__(73);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -13631,7 +13646,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _quizStyles = __webpack_require__(7);
+var _quizStyles = __webpack_require__(5);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -13686,7 +13701,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(12);
 
-var _quizStyles = __webpack_require__(7);
+var _quizStyles = __webpack_require__(5);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -13743,7 +13758,7 @@ var _propTypes = __webpack_require__(2);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _history = __webpack_require__(5);
+var _history = __webpack_require__(6);
 
 var _Router = __webpack_require__(13);
 
@@ -14135,7 +14150,7 @@ if (process.env.NODE_ENV !== "production") {
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var ReactIs = __webpack_require__(19);
-var assign = __webpack_require__(6);
+var assign = __webpack_require__(7);
 
 var ReactPropTypesSecret = __webpack_require__(11);
 var checkPropTypes = __webpack_require__(10);
@@ -15012,7 +15027,7 @@ var _propTypes = __webpack_require__(2);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _history = __webpack_require__(5);
+var _history = __webpack_require__(6);
 
 var _Router = __webpack_require__(13);
 
@@ -15467,9 +15482,13 @@ var _Start = __webpack_require__(18);
 
 var _Start2 = _interopRequireDefault(_Start);
 
+var _SideBar = __webpack_require__(72);
+
+var _SideBar2 = _interopRequireDefault(_SideBar);
+
 var _reactRouterDom = __webpack_require__(12);
 
-var _quizStyles = __webpack_require__(7);
+var _quizStyles = __webpack_require__(5);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -15502,43 +15521,49 @@ function Quiz(props) {
       startOver = _useState10[1];
 
   var currentChord = (0, _react.useRef)(props.data[0]);
-  var noteNum = (0, _react.useRef)(1);
-  var input = (0, _react.useRef)();
-  var noteColors = (0, _react.useRef)([]);
-  var startTime = (0, _react.useRef)([Date.now()]);
-  var clickTime = (0, _react.useRef)([]);
   var chordCount = (0, _react.useRef)(0);
   var questionCount = (0, _react.useRef)(0);
+  var answerNum = (0, _react.useRef)(0);
+  var triesCount = (0, _react.useRef)(0);
+  var triesLog = (0, _react.useRef)([]);
+  var startTime = (0, _react.useRef)([Date.now()]);
+  var clickTime = (0, _react.useRef)([]);
+  var input = (0, _react.useRef)();
+  var noteColors = (0, _react.useRef)([]);
+  var answersSideBar = (0, _react.useRef)([]);
 
-  var timesLog = (0, _react.useRef)([]);
-  var average = (0, _react.useRef)(0);
-  var correct = (0, _react.useRef)(0);
+  //// TODO: combine a lot of the above refs into a nicely structured object with data about user performance
+
 
   function handleClick(choice) {
 
     input.current = choice;
+    triesCount.current = triesCount.current + 1;
     checkInput();
   }
 
   function checkInput() {
-    if (input.current === currentQ.answers[noteNum.current - 1]) {
+    if (input.current === currentQ.answers[answerNum.current]) {
 
       console.log('input.current: ' + input.current);
-      console.log('noteNum.current: ' + noteNum.current);
+      console.log('answerNum.current: ' + answerNum.current);
       console.log('answers.length: ' + currentQ.answers.length);
 
-      if (noteNum.current === currentQ.answers.length) {
-        console.log('here!');
+      triesLog.current.push(triesCount.current);
+      triesCount.current = 0;
+
+      if (answerNum.current === currentQ.answers.length - 1) {
         noteColors.current = [].concat(_toConsumableArray(noteColors.current), [input.current]);
-        noteNum.current = noteNum.current + 1;
+        answerNum.current = answerNum.current + 1;
         clickTime.current.push(Date.now());
         questionCount.current = questionCount.current + 1;
         console.log('next Q: ' + questionCount.current);
         flipSwitch(!redrawSwitch);
+        answersSideBar.current = [].concat(_toConsumableArray(answersSideBar.current), [currentQ.answers]);
         doneQ(true);
       } else {
         noteColors.current = [].concat(_toConsumableArray(noteColors.current), [input.current]);
-        noteNum.current = noteNum.current + 1;
+        answerNum.current = answerNum.current + 1;
         flipSwitch(!redrawSwitch);
         isCorrect(true);
       }
@@ -15551,20 +15576,19 @@ function Quiz(props) {
   (0, _react.useEffect)(function () {
 
     if (endOfQ === true) {
-      console.log('now here!');
       setTimeout(function () {
         input.current = null;
         noteColors.current = [];
-        noteNum.current = 1;
+        answerNum.current = 0;
         startTime.current.push(Date.now());
         if (questionCount.current < currentChord.current.questions.length) {
-          console.log('here!');
           console.log(JSON.stringify(currentChord.current.questions[questionCount.current], null, 4));
           nextQ(currentChord.current.questions[questionCount.current]);
           doneQ(false);
         } else {
           chordCount.current = chordCount.current + 1;
           questionCount.current = 0;
+          answersSideBar.current = [];
           if (chordCount.current < props.data.length) {
             currentChord.current = props.data[chordCount.current];
             console.log('this is chord ' + JSON.stringify(currentChord.current, null, 4));
@@ -15578,80 +15602,36 @@ function Quiz(props) {
     }
   }, [endOfQ]);
 
-  // function doMath() {
-  //
-  //   let time = (clickTime.current[(clickTime.current.length-1)]-startTime.current[(chordCount.current-1)])/1000
-  //   console.log('math= ' + time)
-  //   timesLog.current = [...timesLog.current, time]
-  //
-  //   console.log('reponses so far: ' + JSON.stringify(responsesLog.current));
-  //   if (JSON.stringify(responsesLog.current[responsesLog.current.length-1].answer) === JSON.stringify(responsesLog.current[responsesLog.current.length-1].input)) {
-  //     correct.current = correct.current+1
-  //     console.log('number correct = ' + correct.current);
-  //   }
-  //
-  //   if (chordCount.current === props.data.length) {
-  //     const mean = arr => arr.reduce((a,b) => a + b, 0) / arr.length
-  //     average.current = mean(timesLog.current)
-  //     nextQ(null)
-  //   }
-  //
-  // }
-
-
-  if (noteNum.current - 1 < currentQ.answers.length && chordCount.current !== props.data.length) {
-    if (correctInput || correctInput === null) {
-      return _react2.default.createElement(
-        'div',
-        { style: _quizStyles.pagegrid },
-        _react2.default.createElement(
-          'div',
-          { style: _quizStyles.question },
-          _react2.default.createElement(
-            'h2',
-            { style: _quizStyles.questiontext },
-            currentQ.questionText
-          ),
-          _react2.default.createElement(_Chord2.default, { notes: currentChord.current.notes, octaves: currentChord.current.octaves, clef: currentChord.current.clef, colors: noteColors.current })
-        ),
-        _react2.default.createElement(
-          'div',
-          { style: _quizStyles.choices },
-          currentQ.choices.map(function (choice) {
-            return _react2.default.createElement(_Choice2.default, { onClick: function onClick() {
-                return handleClick(choice);
-              }, choice: choice, key: choice });
-          })
-        )
-      );
-    } else if (!correctInput) {
-      return _react2.default.createElement(
-        'div',
-        { style: _quizStyles.pagegrid },
-        _react2.default.createElement(
-          'div',
-          { style: _quizStyles.question },
-          _react2.default.createElement(
-            'h2',
-            { style: _quizStyles.questiontext },
-            currentQ.questionText
-          ),
-          _react2.default.createElement(_Chord2.default, { notes: currentChord.current.notes, octaves: currentChord.current.octaves, clef: currentChord.current.clef, colors: noteColors.current })
-        ),
-        _react2.default.createElement(
-          'div',
-          { style: _quizStyles.choices },
-          currentQ.choices.map(function (choice) {
-            return _react2.default.createElement(_Choice2.default, { onClick: function onClick() {
-                return handleClick(choice);
-              }, choice: choice, key: choice, input: input.current, wrong: true });
-          })
-        )
-      );
-    }
-  } else if (reset) {
+  if (reset) {
     return _react2.default.createElement(_Start2.default, null);
-  } else if (noteNum.current - 1 === currentQ.answers.length && chordCount.current !== props.data.length) {
+  }
+
+  if (answerNum.current < currentQ.answers.length && chordCount.current < props.data.length) {
+    return _react2.default.createElement(
+      'div',
+      { style: _quizStyles.pagegrid },
+      _react2.default.createElement(
+        'div',
+        { style: _quizStyles.question },
+        _react2.default.createElement(
+          'h2',
+          { style: _quizStyles.questiontext },
+          currentQ.questionText
+        ),
+        _react2.default.createElement(_Chord2.default, { notes: currentChord.current.notes, octaves: currentChord.current.octaves, clef: currentChord.current.clef, colors: noteColors.current }),
+        _react2.default.createElement(_SideBar2.default, { text: answersSideBar.current })
+      ),
+      _react2.default.createElement(
+        'div',
+        { style: _quizStyles.choices },
+        currentQ.choices.map(function (choice) {
+          return _react2.default.createElement(_Choice2.default, { onClick: function onClick() {
+              return handleClick(choice);
+            }, choice: choice, key: choice, input: input.current, redButton: correctInput });
+        })
+      )
+    );
+  } else if (answerNum.current === currentQ.answers.length && chordCount.current !== props.data.length) {
     return _react2.default.createElement(
       'div',
       { style: _quizStyles.pagegrid },
@@ -15668,7 +15648,8 @@ function Quiz(props) {
           'h2',
           null,
           'that\'s right!'
-        )
+        ),
+        _react2.default.createElement(_SideBar2.default, { text: answersSideBar.current })
       ),
       _react2.default.createElement(
         'div',
@@ -15696,7 +15677,7 @@ function Quiz(props) {
       _react2.default.createElement(
         'div',
         { style: _quizStyles.results },
-        _react2.default.createElement(_Results2.default, { average: average.current, times: clickTime.current, startTimes: startTime.current }),
+        _react2.default.createElement(_Results2.default, { times: clickTime.current, startTimes: startTime.current, tries: triesLog.current }),
         _react2.default.createElement(
           'button',
           { onClick: function onClick(e) {
@@ -22492,7 +22473,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _quizStyles = __webpack_require__(7);
+var _quizStyles = __webpack_require__(5);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22500,7 +22481,7 @@ function Choice(props) {
 
   var style = _quizStyles.choicebutton;
 
-  if (props.wrong) {
+  if (!props.redButton) {
     if (props.choice === props.input) {
       style = _extends({}, style, { backgroundColor: 'red' });
     }
@@ -22549,6 +22530,7 @@ function Results(props) {
     }, 0) / arr.length;
   };
   var average = mean(times);
+  var tries = mean(props.tries);
 
   return _react2.default.createElement(
     _react2.default.Fragment,
@@ -22562,7 +22544,13 @@ function Results(props) {
       'p',
       null,
       average,
-      ' seconds average per flashcard'
+      ' seconds average per question'
+    ),
+    _react2.default.createElement(
+      'p',
+      null,
+      tries,
+      ' tries average per question'
     )
   );
 }
@@ -22571,6 +22559,50 @@ exports.default = Results;
 
 /***/ }),
 /* 72 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _quizStyles = __webpack_require__(5);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function SideBar(props) {
+
+  var answersSideBarText = void 0;
+
+  if (props.text.length >= 1) {
+    answersSideBarText = props.text.map(function (item) {
+      return _react2.default.createElement(
+        'h4',
+        { style: _quizStyles.sidebarh4, key: item },
+        item
+      );
+    });
+  } else {
+    answersSideBarText = null;
+  }
+
+  return _react2.default.createElement(
+    'div',
+    { style: _quizStyles.sidebar },
+    answersSideBarText
+  );
+}
+
+exports.default = SideBar;
+
+/***/ }),
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
