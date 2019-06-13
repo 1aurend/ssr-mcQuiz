@@ -11,7 +11,7 @@
     "heroku-prebuild": "npm install --dev",
     "build": "webpack --config webpack.config.js",
     "server": "nodemon server.js",
-    "deploy": "run-s build prod-server"
+    "deploy": "run-s build server"
   },
   "author": "",
   "license": "MIT",
