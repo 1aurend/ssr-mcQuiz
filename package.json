@@ -5,7 +5,10 @@
   "scripts": {
     "start": "webpack -w & nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "heroku-prebuild": "npm install --dev"
+    "heroku-prebuild": "npm install --dev",
+    "build": "webpack --config webpack.config.js",
+    "server": "nodemon server.js",
+    "deploy": "run-s build prod-server"
   },
   "author": "",
   "license": "MIT",
