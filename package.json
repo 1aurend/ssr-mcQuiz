@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "react-svg-loader": "^3.0.3",
+    "express": "^4.17.1"
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
