@@ -1,7 +1,5 @@
-import makeQsReadable from '../server/tools/makeqsreadable'
-import matchIDs from '../server/tools/matchids'
 import Airtable from 'airtable'
-import groupChords from '../server/tools/groupChords'
+import groupChords from './groupChords.js'
 
 require('dotenv').config()
 
