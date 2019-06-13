@@ -1,5 +1,5 @@
 {
-  "name": "rrssr",
+  "name": "ssr-mcQuiz",
   "version": "1.0.0",
   "main": "./src/server/index.js",
   "scripts": {
