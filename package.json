@@ -1,6 +1,9 @@
 {
   "name": "ssr-mcQuiz",
   "version": "1.0.0",
+  "engines": {
+    "node": "11.5.0"
+  },
   "main": "./src/server/index.js",
   "scripts": {
     "start": "webpack -w & nodemon server.js",
