@@ -1,5 +1,5 @@
 import Airtable from 'airtable'
-import groupChords from './groupChords.js'
+import groupChords from './groupchords.js'
 
 require('dotenv').config()
 
