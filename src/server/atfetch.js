@@ -4,6 +4,13 @@ import groupChords from './groupchords.js'
 require('dotenv').config()
 
 
+async function asyncForEach(array, callback) {
+  for (let i = 0; i < array.length; i++) {
+    await callback(array[i], i, array)
+  }
+}
+
+
 async function loadQuiz() {
 
   const ldBase = new Airtable({apiKey: process.env.LD_AT_KEY}).base(process.env.LD_BASE_ID)
@@ -13,21 +20,18 @@ async function loadQuiz() {
     console.log(`Fetching Quiz Data -----------------------`);
 
 
-    const Qs = ldBase('mtQuestions').select({
+    const Qs = await ldBase('mtQuestions').select({
           maxRecords: 16,
           view: "Grid view"
       }).eachPage(function page(records, fetchNextPage) {
 
-          records.forEach(function(record) {
+          asyncForEach(records, (record) => {
               console.log('Retrieved', record.get('questionText'));
               data.push(record._rawJson)
-          })
-          fetchNextPage()
+          }).then(() => fetchNextPage())
 
       }).then(() => {return 'got Qs!'})
 
-
-    console.log(await Qs)
 
     const chords = groupChords(data)
     console.log(chords)
