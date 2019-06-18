@@ -4,10 +4,9 @@ import { renderToString } from "react-dom/server"
 import App from '../shared/App'
 import React from 'react'
 import serialize from "serialize-javascript"
-import loadQuiz from '../shared/atfetch'
+import loadQuiz from './atfetch'
 import { StaticRouter, matchPath } from 'react-router-dom'
-import routes from '../shared/routes'
-import matchIDs from './tools/matchids'
+import routes from './routes'
 
 
 const app = express()
