@@ -1,0 +1,25 @@
+{
+  "userId": "string",
+  "sessionId": "string",
+  "results": [
+    {
+      "chord": [],
+      "questions": [
+        {
+          "type": "string",
+          "answers": [
+            {
+              "answer": "string",
+              "tries": [
+                {"num": num, "inputType": "string"}, (total tries for any q = tries.length)
+              ],
+              "startTime": date string,
+              "endTime": date string,
+              "elapsedTime": (calculate after as end-start? this is a weird one b/c only calculated value in my structure)
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -13,7 +13,7 @@ function QuizContainer(props) {
   //// TODO: add a randomizer function here
 
     return (
-      <Quiz data={quiz} />
+      <Quiz data={quiz} userId={props.userId} sessionId={props.sessionId} />
     )
 
   }

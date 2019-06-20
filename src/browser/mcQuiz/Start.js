@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { pagegrid, question, startinputs, questionh2, questionh3 } from './quizStyles'
 import QuizSelector from './QuizSelector.js'
 import Go from './Go.js'
@@ -19,6 +19,9 @@ function Start(props) {
 
   const [numQs, setNum] = useState(1)
   const [ready, launchQuiz] = useState(false)
+  const userId = useRef('somebody')
+  const sessionId = useRef(Date.now())
+
 
   if (!ready) {
     return (
@@ -36,7 +39,7 @@ function Start(props) {
   }
   else if (ready) {
     return (
-      <QuizContainer num={numQs} data={quizData} />
+      <QuizContainer num={numQs} data={quizData} userId={userId.current} sessionId={sessionId.current} />
     )
   }
 

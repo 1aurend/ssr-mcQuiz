@@ -11,64 +11,84 @@ import { pagegrid, question, choices, results, questionh2, questiontext } from '
 function Quiz (props) {
 
   const [currentQ, nextQ] = useState(props.data[0].questions[0])
-  const [redrawSwitch, flipSwitch] = useState(false)
-  const [correctInput, isCorrect] = useState(true)
   const [endOfQ, doneQ] = useState(false)
   const [reset, startOver] = useState(false)
-
+  const [noteColors, addColor] = useState([])
+  const [incorrectTry, turnRed] = useState([false])
   const currentChord = useRef(props.data[0])
-  const chordCount = useRef(0)
-  const questionCount = useRef(0)
-  const answerNum = useRef(0)
-  const triesCount = useRef(0)
-  const triesLog = useRef([])
-  const startTime = useRef([Date.now()])
-  const clickTime = useRef([])
-  const input = useRef()
-  const noteColors = useRef([])
   const answersSideBar = useRef([])
 
-  //// TODO: combine a lot of the above refs into a nicely structured object with data about user performance
+
+  const sessionData = useRef(
+    {
+      userId: props.userId,
+      sessionId: props.sessionId,
+      results: []
+    })
+
+  const chord = useRef({
+    chord: props.data[0].notes, //placeholder until DF gives me a unique id
+    questions: []
+  })
+
+  const subQ = useRef({
+    text: props.data[0].questions[0].questionText,
+    answers: []
+  })
+
+  const answer = useRef({
+    answer: props.data[0].questions[0].answers[0],
+    tries: [],
+    startTime: Date.now(),
+    endTime: '',
+    elapsedTime: '',
+  })
 
 
 
-  function handleClick(choice) {
+  function handleClick(input) {
 
-    input.current = choice
-    triesCount.current = triesCount.current+1
-    checkInput()
+    answer.current.tries = [...answer.current.tries, {'input': input, type: 'click'}]
+    checkInput(input)
   }
 
-  function checkInput() {
-    if (input.current === currentQ.answers[answerNum.current]) {
+  function onKeyPressed(e) {
 
-      console.log('input.current: ' + input.current);
-      console.log('answerNum.current: ' + answerNum.current);
-      console.log('answers.length: ' + currentQ.answers.length);
+    console.log('here is key: ' + e.key);
+    let key = e.key
+    let input = key.toUpperCase()
+    answer.current.tries = [...answer.current.tries, {'input': input, type: 'keypress'}]
+    checkInput(input)
+  }
 
-      triesLog.current.push(triesCount.current)
-      triesCount.current = 0
+  function checkInput(input) {
+    if (input === currentQ.answers[subQ.current.answers.length]) {
 
-      if (answerNum.current === currentQ.answers.length-1) {
-        noteColors.current = [...noteColors.current, input.current]
-        answerNum.current = answerNum.current+1
-        clickTime.current.push(Date.now())
-        questionCount.current = questionCount.current+1
-        console.log('next Q: ' + questionCount.current);
-        flipSwitch(!redrawSwitch)
+      answer.current.endTime = Date.now()
+      answer.current.elapsedTime = (answer.current.endTime-answer.current.startTime)/1000
+      subQ.current.answers.push(answer.current)
+      answer.current = {
+        answer: props.data[sessionData.current.results.length].questions[chord.current.questions.length].answers[subQ.current.answers.length],
+        tries: [],
+        startTime: Date.now(),
+        endTime: '',
+        elapsedTime: '',
+      }
+
+      if (subQ.current.answers.length === currentQ.answers.length) {
+        addColor([...noteColors, input])
+        chord.current.questions.push(subQ.current)
+        console.log('next Q: ' + chord.current.questions.length);
         answersSideBar.current = [...answersSideBar.current, currentQ.answers]
         doneQ(true)
       }
       else {
-        noteColors.current = [...noteColors.current, input.current]
-        answerNum.current = answerNum.current+1
-        flipSwitch(!redrawSwitch)
-        isCorrect(true)
+        addColor([...noteColors, input])
+        turnRed([...incorrectTry, false])
       }
     }
     else {
-      flipSwitch(!redrawSwitch)
-      isCorrect(false)
+      turnRed([...incorrectTry, true])
     }
   }
 
@@ -76,29 +96,39 @@ function Quiz (props) {
 
     if (endOfQ === true) {
       setTimeout(() => {
-        input.current = null
-        noteColors.current = []
-        answerNum.current = 0
-        startTime.current.push(Date.now())
-        if (questionCount.current < currentChord.current.questions.length) {
-          console.log(JSON.stringify(currentChord.current.questions[questionCount.current], null, 4));
-          nextQ(currentChord.current.questions[questionCount.current])
+        addColor([])
+        turnRed([])
+        if (chord.current.questions.length < currentChord.current.questions.length) {
+          subQ.current = {
+            text: props.data[sessionData.current.results.length].questions[chord.current.questions.length].questionText,
+            answers: []
+          }
+          answer.current = {
+            answer: props.data[sessionData.current.results.length].questions[chord.current.questions.length].answers[subQ.current.answers.length],
+            tries: [],
+            startTime: Date.now(),
+            endTime: '',
+            elapsedTime: '',
+          }
+          nextQ(currentChord.current.questions[chord.current.questions.length])
           doneQ(false)
         }
         else {
-          chordCount.current = chordCount.current+1
-          questionCount.current = 0
+          sessionData.current.results= [...sessionData.current.results, chord.current]
           answersSideBar.current = []
-          if (chordCount.current < props.data.length) {
-            currentChord.current = props.data[chordCount.current]
-            console.log('this is chord ' + JSON.stringify(currentChord.current, null, 4));
-            nextQ(props.data[chordCount.current].questions[questionCount.current])
+          if (sessionData.current.results.length < props.data.length) {
+            chord.current = {
+              chord: props.data[sessionData.current.results.length].notes,
+              questions: []
+            }
+            currentChord.current = props.data[sessionData.current.results.length] //don't need
+            nextQ(props.data[sessionData.current.results.length].questions[chord.current.questions.length])
             doneQ(false)
           }
           else {
+            console.log(JSON.stringify(sessionData.current, null, 4));
             doneQ(false)
           }
-
         }
       }, 1000)
     }
@@ -110,45 +140,48 @@ function Quiz (props) {
     return <Start />
   }
 
-  if (answerNum.current < currentQ.answers.length && chordCount.current < props.data.length) {
+  if (subQ.current.answers.length < currentQ.answers.length && sessionData.current.results.length < props.data.length) {
       return (
-        <div style={pagegrid}>
+        <div style={pagegrid} onKeyDown={(e) => onKeyPressed(e)} tabIndex="0">
           <div style={question}>
             <h2 style={questiontext}>{currentQ.questionText}</h2>
-            <Chord notes={currentChord.current.notes} octaves={currentChord.current.octaves} clef={currentChord.current.clef} colors={noteColors.current} />
+            <Chord notes={currentChord.current.notes} octaves={currentChord.current.octaves} clef={currentChord.current.clef} colors={noteColors} />
             <SideBar text={answersSideBar.current} />
         </div>
           <div style={choices}>
-            {currentQ.choices.map(choice => {return (
-              <Choice onClick={() => handleClick(choice)} choice={choice} key={choice} input={input.current} redButton={correctInput} />)})}
+            {currentQ.choices.map(choice => {
+              let inpt = answer.current.tries[answer.current.tries.length-1] ? answer.current.tries[answer.current.tries.length-1].input : null
+              console.log('test ' + inpt);
+              return (
+              <Choice onClick={() => handleClick(choice)} choice={choice} key={choice} input={inpt} redButton={incorrectTry} />)})}
           </div>
         </div>
       )
   }
-  else if (answerNum.current === currentQ.answers.length && chordCount.current !== props.data.length) {
+  else if (subQ.current.answers.length === currentQ.answers.length && sessionData.current.results.length !== props.data.length) {
     return (
-      <div style={pagegrid}>
+      <div style={pagegrid} onKeyDown={(e) => onKeyPressed(e)} tabIndex="0">
         <div style={question}>
           <h2 style={questiontext}>{currentQ.questionText}</h2>
-          <Chord notes={currentChord.current.notes} octaves={currentChord.current.octaves} clef={currentChord.current.clef} colors={noteColors.current} />
+          <Chord notes={currentChord.current.notes} octaves={currentChord.current.octaves} clef={currentChord.current.clef} colors={noteColors} />
           <h2>that's right!</h2>
           <SideBar text={answersSideBar.current} />
         </div>
         <div style={choices}>
           {currentQ.choices.map(choice => {return (
-            <Choice onClick={() => handleClick(choice)} choice={choice} key={choice} />)})}
+            <Choice onClick={() => handleClick(choice)} choice={choice} key={choice} redButton={incorrectTry} />)})}
         </div>
       </div>
     )
   }
-  else if (chordCount.current === props.data.length) {
+  else if (sessionData.current.results.length === props.data.length) {
       return (
       <div style={pagegrid}>
         <div style={question}>
           <h2 style={questionh2}>End of Quiz!</h2>
         </div>
         <div style={results}>
-          <Results times={clickTime.current} startTimes={startTime.current} tries={triesLog.current}/>
+          <Results data={sessionData}/>
           <button onClick={(e) => {startOver(true)}}>Start Over</button>
         </div>
       </div>

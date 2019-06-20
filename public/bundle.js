@@ -2370,6 +2370,9 @@ function Start(props) {
       ready = _useState4[0],
       launchQuiz = _useState4[1];
 
+  var userId = (0, _react.useRef)('somebody');
+  var sessionId = (0, _react.useRef)(Date.now());
+
   if (!ready) {
     return _react2.default.createElement(
       'div',
@@ -2400,7 +2403,7 @@ function Start(props) {
       )
     );
   } else if (ready) {
-    return _react2.default.createElement(_QuizContainer2.default, { num: numQs, data: quizData });
+    return _react2.default.createElement(_QuizContainer2.default, { num: numQs, data: quizData, userId: userId.current, sessionId: sessionId.current });
   }
 }
 
@@ -3819,7 +3822,7 @@ function QuizContainer(props) {
 
   //// TODO: add a randomizer function here
 
-  return _react2.default.createElement(_Quiz2.default, { data: quiz });
+  return _react2.default.createElement(_Quiz2.default, { data: quiz, userId: props.userId, sessionId: props.sessionId });
 }
 
 exports.default = QuizContainer;
@@ -15502,74 +15505,92 @@ function Quiz(props) {
 
   var _useState3 = (0, _react.useState)(false),
       _useState4 = _slicedToArray(_useState3, 2),
-      redrawSwitch = _useState4[0],
-      flipSwitch = _useState4[1];
+      endOfQ = _useState4[0],
+      doneQ = _useState4[1];
 
-  var _useState5 = (0, _react.useState)(true),
+  var _useState5 = (0, _react.useState)(false),
       _useState6 = _slicedToArray(_useState5, 2),
-      correctInput = _useState6[0],
-      isCorrect = _useState6[1];
+      reset = _useState6[0],
+      startOver = _useState6[1];
 
-  var _useState7 = (0, _react.useState)(false),
+  var _useState7 = (0, _react.useState)([]),
       _useState8 = _slicedToArray(_useState7, 2),
-      endOfQ = _useState8[0],
-      doneQ = _useState8[1];
+      noteColors = _useState8[0],
+      addColor = _useState8[1];
 
-  var _useState9 = (0, _react.useState)(false),
+  var _useState9 = (0, _react.useState)([false]),
       _useState10 = _slicedToArray(_useState9, 2),
-      reset = _useState10[0],
-      startOver = _useState10[1];
+      incorrectTry = _useState10[0],
+      turnRed = _useState10[1];
 
   var currentChord = (0, _react.useRef)(props.data[0]);
-  var chordCount = (0, _react.useRef)(0);
-  var questionCount = (0, _react.useRef)(0);
-  var answerNum = (0, _react.useRef)(0);
-  var triesCount = (0, _react.useRef)(0);
-  var triesLog = (0, _react.useRef)([]);
-  var startTime = (0, _react.useRef)([Date.now()]);
-  var clickTime = (0, _react.useRef)([]);
-  var input = (0, _react.useRef)();
-  var noteColors = (0, _react.useRef)([]);
   var answersSideBar = (0, _react.useRef)([]);
 
-  //// TODO: combine a lot of the above refs into a nicely structured object with data about user performance
+  var sessionData = (0, _react.useRef)({
+    userId: props.userId,
+    sessionId: props.sessionId,
+    results: []
+  });
 
+  var chord = (0, _react.useRef)({
+    chord: props.data[0].notes, //placeholder until DF gives me a unique id
+    questions: []
+  });
 
-  function handleClick(choice) {
+  var subQ = (0, _react.useRef)({
+    text: props.data[0].questions[0].questionText,
+    answers: []
+  });
 
-    input.current = choice;
-    triesCount.current = triesCount.current + 1;
-    checkInput();
+  var answer = (0, _react.useRef)({
+    answer: props.data[0].questions[0].answers[0],
+    tries: [],
+    startTime: Date.now(),
+    endTime: '',
+    elapsedTime: ''
+  });
+
+  function handleClick(input) {
+
+    answer.current.tries = [].concat(_toConsumableArray(answer.current.tries), [{ 'input': input, type: 'click' }]);
+    checkInput(input);
   }
 
-  function checkInput() {
-    if (input.current === currentQ.answers[answerNum.current]) {
+  function onKeyPressed(e) {
 
-      console.log('input.current: ' + input.current);
-      console.log('answerNum.current: ' + answerNum.current);
-      console.log('answers.length: ' + currentQ.answers.length);
+    console.log('here is key: ' + e.key);
+    var key = e.key;
+    var input = key.toUpperCase();
+    answer.current.tries = [].concat(_toConsumableArray(answer.current.tries), [{ 'input': input, type: 'keypress' }]);
+    checkInput(input);
+  }
 
-      triesLog.current.push(triesCount.current);
-      triesCount.current = 0;
+  function checkInput(input) {
+    if (input === currentQ.answers[subQ.current.answers.length]) {
 
-      if (answerNum.current === currentQ.answers.length - 1) {
-        noteColors.current = [].concat(_toConsumableArray(noteColors.current), [input.current]);
-        answerNum.current = answerNum.current + 1;
-        clickTime.current.push(Date.now());
-        questionCount.current = questionCount.current + 1;
-        console.log('next Q: ' + questionCount.current);
-        flipSwitch(!redrawSwitch);
+      answer.current.endTime = Date.now();
+      answer.current.elapsedTime = (answer.current.endTime - answer.current.startTime) / 1000;
+      subQ.current.answers.push(answer.current);
+      answer.current = {
+        answer: props.data[sessionData.current.results.length].questions[chord.current.questions.length].answers[subQ.current.answers.length],
+        tries: [],
+        startTime: Date.now(),
+        endTime: '',
+        elapsedTime: ''
+      };
+
+      if (subQ.current.answers.length === currentQ.answers.length) {
+        addColor([].concat(_toConsumableArray(noteColors), [input]));
+        chord.current.questions.push(subQ.current);
+        console.log('next Q: ' + chord.current.questions.length);
         answersSideBar.current = [].concat(_toConsumableArray(answersSideBar.current), [currentQ.answers]);
         doneQ(true);
       } else {
-        noteColors.current = [].concat(_toConsumableArray(noteColors.current), [input.current]);
-        answerNum.current = answerNum.current + 1;
-        flipSwitch(!redrawSwitch);
-        isCorrect(true);
+        addColor([].concat(_toConsumableArray(noteColors), [input]));
+        turnRed([].concat(_toConsumableArray(incorrectTry), [false]));
       }
     } else {
-      flipSwitch(!redrawSwitch);
-      isCorrect(false);
+      turnRed([].concat(_toConsumableArray(incorrectTry), [true]));
     }
   }
 
@@ -15577,24 +15598,35 @@ function Quiz(props) {
 
     if (endOfQ === true) {
       setTimeout(function () {
-        input.current = null;
-        noteColors.current = [];
-        answerNum.current = 0;
-        startTime.current.push(Date.now());
-        if (questionCount.current < currentChord.current.questions.length) {
-          console.log(JSON.stringify(currentChord.current.questions[questionCount.current], null, 4));
-          nextQ(currentChord.current.questions[questionCount.current]);
+        addColor([]);
+        turnRed([]);
+        if (chord.current.questions.length < currentChord.current.questions.length) {
+          subQ.current = {
+            text: props.data[sessionData.current.results.length].questions[chord.current.questions.length].questionText,
+            answers: []
+          };
+          answer.current = {
+            answer: props.data[sessionData.current.results.length].questions[chord.current.questions.length].answers[subQ.current.answers.length],
+            tries: [],
+            startTime: Date.now(),
+            endTime: '',
+            elapsedTime: ''
+          };
+          nextQ(currentChord.current.questions[chord.current.questions.length]);
           doneQ(false);
         } else {
-          chordCount.current = chordCount.current + 1;
-          questionCount.current = 0;
+          sessionData.current.results = [].concat(_toConsumableArray(sessionData.current.results), [chord.current]);
           answersSideBar.current = [];
-          if (chordCount.current < props.data.length) {
-            currentChord.current = props.data[chordCount.current];
-            console.log('this is chord ' + JSON.stringify(currentChord.current, null, 4));
-            nextQ(props.data[chordCount.current].questions[questionCount.current]);
+          if (sessionData.current.results.length < props.data.length) {
+            chord.current = {
+              chord: props.data[sessionData.current.results.length].notes,
+              questions: []
+            };
+            currentChord.current = props.data[sessionData.current.results.length]; //don't need
+            nextQ(props.data[sessionData.current.results.length].questions[chord.current.questions.length]);
             doneQ(false);
           } else {
+            console.log(JSON.stringify(sessionData.current, null, 4));
             doneQ(false);
           }
         }
@@ -15606,10 +15638,12 @@ function Quiz(props) {
     return _react2.default.createElement(_Start2.default, null);
   }
 
-  if (answerNum.current < currentQ.answers.length && chordCount.current < props.data.length) {
+  if (subQ.current.answers.length < currentQ.answers.length && sessionData.current.results.length < props.data.length) {
     return _react2.default.createElement(
       'div',
-      { style: _quizStyles.pagegrid },
+      { style: _quizStyles.pagegrid, onKeyDown: function onKeyDown(e) {
+          return onKeyPressed(e);
+        }, tabIndex: '0' },
       _react2.default.createElement(
         'div',
         { style: _quizStyles.question },
@@ -15618,23 +15652,27 @@ function Quiz(props) {
           { style: _quizStyles.questiontext },
           currentQ.questionText
         ),
-        _react2.default.createElement(_Chord2.default, { notes: currentChord.current.notes, octaves: currentChord.current.octaves, clef: currentChord.current.clef, colors: noteColors.current }),
+        _react2.default.createElement(_Chord2.default, { notes: currentChord.current.notes, octaves: currentChord.current.octaves, clef: currentChord.current.clef, colors: noteColors }),
         _react2.default.createElement(_SideBar2.default, { text: answersSideBar.current })
       ),
       _react2.default.createElement(
         'div',
         { style: _quizStyles.choices },
         currentQ.choices.map(function (choice) {
+          var inpt = answer.current.tries[answer.current.tries.length - 1] ? answer.current.tries[answer.current.tries.length - 1].input : null;
+          console.log('test ' + inpt);
           return _react2.default.createElement(_Choice2.default, { onClick: function onClick() {
               return handleClick(choice);
-            }, choice: choice, key: choice, input: input.current, redButton: correctInput });
+            }, choice: choice, key: choice, input: inpt, redButton: incorrectTry });
         })
       )
     );
-  } else if (answerNum.current === currentQ.answers.length && chordCount.current !== props.data.length) {
+  } else if (subQ.current.answers.length === currentQ.answers.length && sessionData.current.results.length !== props.data.length) {
     return _react2.default.createElement(
       'div',
-      { style: _quizStyles.pagegrid },
+      { style: _quizStyles.pagegrid, onKeyDown: function onKeyDown(e) {
+          return onKeyPressed(e);
+        }, tabIndex: '0' },
       _react2.default.createElement(
         'div',
         { style: _quizStyles.question },
@@ -15643,7 +15681,7 @@ function Quiz(props) {
           { style: _quizStyles.questiontext },
           currentQ.questionText
         ),
-        _react2.default.createElement(_Chord2.default, { notes: currentChord.current.notes, octaves: currentChord.current.octaves, clef: currentChord.current.clef, colors: noteColors.current }),
+        _react2.default.createElement(_Chord2.default, { notes: currentChord.current.notes, octaves: currentChord.current.octaves, clef: currentChord.current.clef, colors: noteColors }),
         _react2.default.createElement(
           'h2',
           null,
@@ -15657,11 +15695,11 @@ function Quiz(props) {
         currentQ.choices.map(function (choice) {
           return _react2.default.createElement(_Choice2.default, { onClick: function onClick() {
               return handleClick(choice);
-            }, choice: choice, key: choice });
+            }, choice: choice, key: choice, redButton: incorrectTry });
         })
       )
     );
-  } else if (chordCount.current === props.data.length) {
+  } else if (sessionData.current.results.length === props.data.length) {
     return _react2.default.createElement(
       'div',
       { style: _quizStyles.pagegrid },
@@ -15677,7 +15715,7 @@ function Quiz(props) {
       _react2.default.createElement(
         'div',
         { style: _quizStyles.results },
-        _react2.default.createElement(_Results2.default, { times: clickTime.current, startTimes: startTime.current, tries: triesLog.current }),
+        _react2.default.createElement(_Results2.default, { data: sessionData }),
         _react2.default.createElement(
           'button',
           { onClick: function onClick(e) {
@@ -22479,10 +22517,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function Choice(props) {
 
+  console.log(props.redButton);
+
   var style = _quizStyles.choicebutton;
 
-  if (!props.redButton) {
+  if (props.redButton[props.redButton.length - 1]) {
+    console.log('here');
     if (props.choice === props.input) {
+      console.log('and here');
       style = _extends({}, style, { backgroundColor: 'red' });
     }
   }
@@ -22515,22 +22557,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function Results(props) {
 
-  console.log(props.startTimes);
-  console.log(props.times);
-
   var times = [];
 
-  for (var i = 0; i < props.times.length; i++) {
-    times.push((props.times[i] - props.startTimes[i]) / 1000);
-  }
-
-  var mean = function mean(arr) {
-    return arr.reduce(function (a, b) {
-      return a + b;
-    }, 0) / arr.length;
-  };
-  var average = mean(times);
-  var tries = mean(props.tries);
+  // for (var i = 0; i < props.times.length; i++) {
+  //   times.push((props.times[i]-props.startTimes[i])/1000)
+  // }
+  //
+  // const mean = arr => arr.reduce((a,b) => a + b, 0) / arr.length
+  // let average = mean(times)
+  // let tries = mean(props.tries)
 
   return _react2.default.createElement(
     _react2.default.Fragment,
@@ -22543,14 +22578,12 @@ function Results(props) {
     _react2.default.createElement(
       'p',
       null,
-      average,
-      ' seconds average per question'
+      'some seconds average per question'
     ),
     _react2.default.createElement(
       'p',
       null,
-      tries,
-      ' tries average per question'
+      'some tries average per question'
     )
   );
 }
